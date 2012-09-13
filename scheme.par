@@ -1,18 +1,14 @@
 [*
-var sexprCount = 0;
+
 var result = null;
-var NIL = {type:'NULL'};
-var create_list = function (x) { return {type:'LIST', val:[x]}; }
+
+var create_null = function () { return { type:'NULL' }; }
+var create_string = function (x) { return { type:'STRING', val:x }; }
+var create_symbol = function (x) { return { type:'SYMBOL', val:x }; }
+var create_number = function (x) { return { type:"NUMBER", val:x }; }
+var create_list = function (x) { return { type:'LIST', val:[x] }; }
 var array_append = function (x, y) { return [x,y]; }
-var list = function (x, y) { return cons(x, cons(y, NIL)); };
-var quote = function (x) { return list(intern("QUOTE", x)); };
-var backquote = function (x) {return list(intern("BACKQUOTE", x)); };
-var comma = function (x)  {return list(intern("COMMA", x)); };
-var at = function (x)  {return list(intern("AT", x)); };
-var append_improper_tail = function (list, x) { return FIXME; };
-var cons = function (x,y) {return {type:'CONS', val:[x,y]}; };
-var intern = function (x) {return {type:'SYMBOL', val:x}; };
-var dump = function (x) { print(JSON.stringify(x)); };
+
 *]
 
 /~ Tokens Definitions for Scheme Syntax ~/
@@ -22,12 +18,13 @@ var dump = function (x) { print(JSON.stringify(x)); };
 ;
 
 /~ Token pattern matching rules ~/
-  '\)'    RPAREN
-  '\('    LPAREN
-  '\.'    DOT
-  '[0-9]+|[0-9]+\.[0-9]*|[0-9]*\.[0-9]+'    NUMBER   [* %match = parseFloat( %match ); *]
-  '[^\(\)0-9\.\'\`\,\@"].*'                 SYMBOL   /~ symbols cannot begin with digits, parens, quotes, dots, etc. ~/
-  '\"[^"]*\"'                               STRING   [* %match = %match.substr( 1, %match.length - 2 ); *]
+    '\)'    RPAREN
+    '\s'     SPACE
+    '\('    LPAREN
+    '\.'    DOT
+    '[0-9]+[ ]?|[0-9]+\.[0-9]*|[0-9]*\.[0-9]+'    NUMBER   [* %match = parseFloat( %match ); *]
+    '[^\(\)0-9\.\'\`\,\@"].*'                 SYMBOL   /~ symbols cannot begin with digits, parens, quotes, dots, etc. ~/
+    '\"[^"]*\"'                               STRING   [* %match = %match.substr( 1, %match.length - 2 ); *]
   ;
 
 ##
@@ -40,18 +37,18 @@ sexpr:      atom
             | list                                   [* %% = %1; *]
             ;
 
-list:       LPAREN RPAREN	                         [* %% = NIL; *]
+list:       LPAREN RPAREN	                         [* %% = create_null(); *]
 	        | LPAREN members RPAREN                  [* %% = create_list(%2) *]
-	        | LPAREN members DOT sexpr RPAREN        [* %% = append_improper_tail(%2, %4); *]
             ;
 
 members:    members sexpr                            [* %% = array_append(%1, %2); *]
             | sexpr                                  [* %% = %1; *]
             ;
 
-atom:       NUMBER                                   [* %% = {type:'NUMBER', val:%1}; *]
-            | SYMBOL                                 [* %% = intern(%1); *]
-            | STRING                                 [* %% = {type:'STRING', val:%1}; *]
+atom:       NUMBER                                   [* %% = create_number(%1); *]
+            | SYMBOL                                 [* %% = create_symbol(%1); *]
+            | STRING                                 [* %% = create_string(%1); *]
+            | SPACE
             ;
             
 
@@ -75,20 +72,21 @@ process.stdout.write("> ");
 
 process.stdin.on('data', function (text) {
 
-  if( text.trim() != "" ) {
+    if( text.trim() != "" ) {
     
-    // Send text to scheme lex
-    if( ( error_count = __NODEJS_parse( text.trim(), error_offsets, error_lookaheads ) ) > 0 ) {
+        // Send text to scheme lex
+        if( ( error_count = __NODEJS_parse( text.trim(), error_offsets, error_lookaheads ) ) > 0 ) {
        
-        for( var i = 0; i < error_count; i++ )
-            console.log( "Parse error near " + text.substr( error_offsets[i] ) + ", expecting \"" + error_lookaheads[i].join() + "\"" );
-    }
-    else {
+            for( var i = 0; i < error_count; i++ )
+                console.log( "Parse error near " + text.substr( error_offsets[i] ) + ", expecting \"" + error_lookaheads[i].join() + "\"" );
+        }
+        else {
       
-      console.log('> ' + JSON.stringify(result)); // print the read stage text back as the print stage
+            console.log('> ' + JSON.stringify(result)); // print the read stage text back as the print stage
+            console.log(text);
+        }
     }
-  }
 
-  process.stdout.write("> "); // now loop or wait for user input again
+    process.stdout.write("> "); // now loop or wait for user input again
 });
 *]
