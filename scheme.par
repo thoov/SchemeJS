@@ -1,11 +1,14 @@
 [*
 var sexprCount = 0;
-var NIL = {type:'NIL', val: null};
+var result = null;
+var NIL = {type:'NULL'};
+var create_list = function (x) { return {type:'LIST', val:[x]}; }
+var array_append = function (x, y) { return [x,y]; }
 var list = function (x, y) { return cons(x, cons(y, NIL)); };
-var quote = function (x) { return list(intern("quote", x)); };
-var backquote = function (x) {return list(intern("backquote", x)); };
-var comma = function (x)  {return list(intern("comma", x)); };
-var at = function (x)  {return list(intern("at", x)); };
+var quote = function (x) { return list(intern("QUOTE", x)); };
+var backquote = function (x) {return list(intern("BACKQUOTE", x)); };
+var comma = function (x)  {return list(intern("COMMA", x)); };
+var at = function (x)  {return list(intern("AT", x)); };
 var append_improper_tail = function (list, x) { return FIXME; };
 var cons = function (x,y) {return {type:'CONS', val:[x,y]}; };
 var intern = function (x) {return {type:'SYMBOL', val:x}; };
@@ -19,63 +22,39 @@ var dump = function (x) { print(JSON.stringify(x)); };
 ;
 
 /~ Token pattern matching rules ~/
-  '\('    RPAREN
-  '\)'    LPAREN
-        '\.'    DOT
-  '\'' QUOTE
-  '\`' BACKQUOTE
-  '\,' COMMA
-  '\@' AT
-  '[0-9]+|[0-9]+\.[0-9]*|[0-9]*\.[0-9]+'    NUMBER [* %match = parseFloat( %match ); *]
-  '[^\(\)0-9\.\'\`\,\@].*'  SYMBOL    /~ symbols cannot begin with digits, parens, quotes, dots, etc. ~/
-        '\"[^"]*\"' STRING  
-
-                           /~ [* %match = %match.substr( 1, %match.length - 2 ); *] ~/
-;
+  '\)'    RPAREN
+  '\('    LPAREN
+  '\.'    DOT
+  '[0-9]+|[0-9]+\.[0-9]*|[0-9]*\.[0-9]+'    NUMBER   [* %match = parseFloat( %match ); *]
+  '[^\(\)0-9\.\'\`\,\@"].*'                 SYMBOL   /~ symbols cannot begin with digits, parens, quotes, dots, etc. ~/
+  '\"[^"]*\"'                               STRING   [* %match = %match.substr( 1, %match.length - 2 ); *]
+  ;
 
 ##
 
-/~ Grammar rules ~/
 
-/~ if you like you can use a grammar rule to drive the REPL, but perhaps better to write a while loop...
+readonce:   sexpr                                    [* result = %1; *]
+            ;
 
-repl:   repl sexpr   [* sexprCount++;
-                      print(sexprCount + "> ");
-          dump(%2);
-        *]
-      | sexpr	 [* print("Welcome to SJSU Tiny Scheme\n");
-	        sexprCount++;
-                      print(sexprCount + "> ");
-          dump(%2);
-        *]
+sexpr:      atom                                      
+            | list                                   [* %% = %1; *]
+            ;
 
-   ;
-~/
+list:       LPAREN RPAREN	                         [* %% = NIL; *]
+	        | LPAREN members RPAREN                  [* %% = create_list(%2) *]
+	        | LPAREN members DOT sexpr RPAREN        [* %% = append_improper_tail(%2, %4); *]
+            ;
 
-readonce:  sexpr;
-                          [* /~ FIXME: add some code to print out your structure ~/ *]
+members:    members sexpr                            [* %% = array_append(%1, %2); *]
+            | sexpr                                  [* %% = %1; *]
+            ;
 
-sexpr:    list
-  | atom
-  | QUOTE sexpr      [* %% = quote(%2); *]
-  | BACKQUOTE sexpr  [* %% = backquote(%2); *]
-  | COMMA sexpr	   [* %% = comma(%2); *]
-  | AT sexpr     [* %% = at(%2); *]
-  ;
+atom:       NUMBER                                   [* %% = {type:'NUMBER', val:%1}; *]
+            | SYMBOL                                 [* %% = intern(%1); *]
+            | STRING                                 [* %% = {type:'STRING', val:%1}; *]
+            ;
+            
 
-list:     LPAREN RPAREN	              [* %% = null; *]
-	| LPAREN members RPAREN      [* %% = %2; *]
-	| LPAREN members DOT sexpr RPAREN    [* %% = append_improper_tail(%2, %4); *]
-  ;
-
-members:  members sexpr      [* %% = cons(%1, %2); *]
-  | sexpr
-        ;
-
-atom:   NUMBER   [* %% = {type:'number', val:%1}; *]
-      | SYMBOL   [* %% = intern(%1); *]
-      | STRING   [* %% = {type:'string', val:%1}; *]
-      ;
 
 [*
 var error_offsets = new Array();
@@ -88,7 +67,7 @@ var error_count = 0;
 //##PREFIX##_dbg_withparsetree = true;
 //##PREFIX##_dbg_withstepbystep = true;
 
-console.log("Welcome to the Scheme REPL by Travis Hoover");
+console.log("Welcome to the Scheme REPL by Travis Hoover\n");
 
 process.stdin.resume();
 process.stdin.setEncoding('utf8'); 
@@ -96,17 +75,20 @@ process.stdout.write("> ");
 
 process.stdin.on('data', function (text) {
 
-  // Send text to scheme lex
-  if( ( error_count = __NODEJS_parse( text, error_offsets, error_lookaheads ) ) > 0 )
-  {
-      for( var i = 0; i < error_count; i++ )
-          console.log( "Parse error near " + text.substr( error_offsets[i] ) + ", expecting \"" + error_lookaheads[i].join() + "\"" );
+  if( text.trim() != "" ) {
+    
+    // Send text to scheme lex
+    if( ( error_count = __NODEJS_parse( text.trim(), error_offsets, error_lookaheads ) ) > 0 ) {
+       
+        for( var i = 0; i < error_count; i++ )
+            console.log( "Parse error near " + text.substr( error_offsets[i] ) + ", expecting \"" + error_lookaheads[i].join() + "\"" );
+    }
+    else {
+      
+      console.log('> ' + JSON.stringify(result)); // print the read stage text back as the print stage
+    }
   }
 
-
-
-  console.log('> ' + text); // print the read stage text back as the print stage
-
   process.stdout.write("> "); // now loop or wait for user input again
- });
+});
 *]
