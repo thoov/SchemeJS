@@ -139,8 +139,7 @@ switch( state )
 		break;
 
 	case 10:
-		if( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 31 ) || ( info.src.charCodeAt( pos ) >= 33 && info.src.charCodeAt( pos ) <= 40 ) || ( info.src.charCodeAt( pos ) >= 42 && info.src.charCodeAt( pos ) <= 254 ) ) state = 1;
-		else if( info.src.charCodeAt( pos ) == 41 ) state = 4;
+		if( info.src.charCodeAt( pos ) == 41 ) state = 4;
 		else state = -1;
 		match = 1;
 		match_pos = pos;

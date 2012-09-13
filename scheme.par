@@ -22,7 +22,7 @@ var array_append = function (x, y) { return [x,y]; }
     '\([ ]?'    LPAREN
     '\.'        DOT
     '[0-9]+[ ]?|[0-9]+\.[0-9]*|[0-9]*\.[0-9]+'    NUMBER   [* %match = parseFloat( %match ); *]
-    '[^\(\)0-9\.\'\`\,\@"][^\) ]*'                SYMBOL   /~ symbols cannot begin with digits, parens, quotes, dots, etc. ~/
+    '[^\(\)0-9\.\'\`\,\@" ][^\) ]*'                SYMBOL   /~ symbols cannot begin with digits, parens, quotes, dots, etc. ~/
     '\"[^"]*\"'                                   STRING   [* %match = %match.substr( 1, %match.length - 2 ); *]
   ;
 
