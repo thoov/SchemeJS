@@ -54,7 +54,7 @@ function __NODEJS_lex( info )
 		start = pos;
 
 		if( info.src.length <= start )
-			return 14;
+			return 13;
 
 		do
 		{
@@ -62,36 +62,37 @@ function __NODEJS_lex( info )
 switch( state )
 {
 	case 0:
-		if( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 8 ) || ( info.src.charCodeAt( pos ) >= 11 && info.src.charCodeAt( pos ) <= 12 ) || ( info.src.charCodeAt( pos ) >= 14 && info.src.charCodeAt( pos ) <= 31 ) || info.src.charCodeAt( pos ) == 33 || ( info.src.charCodeAt( pos ) >= 35 && info.src.charCodeAt( pos ) <= 38 ) || ( info.src.charCodeAt( pos ) >= 42 && info.src.charCodeAt( pos ) <= 43 ) || info.src.charCodeAt( pos ) == 45 || info.src.charCodeAt( pos ) == 47 || info.src.charCodeAt( pos ) == 58 || ( info.src.charCodeAt( pos ) >= 60 && info.src.charCodeAt( pos ) <= 63 ) || ( info.src.charCodeAt( pos ) >= 65 && info.src.charCodeAt( pos ) <= 95 ) || ( info.src.charCodeAt( pos ) >= 97 && info.src.charCodeAt( pos ) <= 114 ) || ( info.src.charCodeAt( pos ) >= 116 && info.src.charCodeAt( pos ) <= 254 ) ) state = 1;
-		else if( ( info.src.charCodeAt( pos ) >= 9 && info.src.charCodeAt( pos ) <= 10 ) || info.src.charCodeAt( pos ) == 32 ) state = 2;
+		if( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 8 ) || ( info.src.charCodeAt( pos ) >= 11 && info.src.charCodeAt( pos ) <= 12 ) || ( info.src.charCodeAt( pos ) >= 14 && info.src.charCodeAt( pos ) <= 31 ) || info.src.charCodeAt( pos ) == 33 || ( info.src.charCodeAt( pos ) >= 35 && info.src.charCodeAt( pos ) <= 38 ) || ( info.src.charCodeAt( pos ) >= 42 && info.src.charCodeAt( pos ) <= 43 ) || info.src.charCodeAt( pos ) == 45 || info.src.charCodeAt( pos ) == 47 || info.src.charCodeAt( pos ) == 58 || ( info.src.charCodeAt( pos ) >= 60 && info.src.charCodeAt( pos ) <= 63 ) || ( info.src.charCodeAt( pos ) >= 65 && info.src.charCodeAt( pos ) <= 95 ) || ( info.src.charCodeAt( pos ) >= 97 && info.src.charCodeAt( pos ) <= 254 ) ) state = 1;
+		else if( ( info.src.charCodeAt( pos ) >= 9 && info.src.charCodeAt( pos ) <= 10 ) ) state = 2;
 		else if( info.src.charCodeAt( pos ) == 40 ) state = 3;
 		else if( info.src.charCodeAt( pos ) == 41 ) state = 4;
 		else if( info.src.charCodeAt( pos ) == 46 ) state = 5;
 		else if( ( info.src.charCodeAt( pos ) >= 48 && info.src.charCodeAt( pos ) <= 57 ) ) state = 6;
-		else if( info.src.charCodeAt( pos ) == 115 ) state = 7;
-		else if( info.src.charCodeAt( pos ) == 34 ) state = 9;
-		else if( info.src.charCodeAt( pos ) == 13 ) state = 10;
-		else if( info.src.charCodeAt( pos ) == 59 ) state = 12;
+		else if( info.src.charCodeAt( pos ) == 34 ) state = 8;
+		else if( info.src.charCodeAt( pos ) == 13 ) state = 9;
+		else if( info.src.charCodeAt( pos ) == 32 ) state = 10;
+		else if( info.src.charCodeAt( pos ) == 59 ) state = 14;
 		else state = -1;
 		break;
 
 	case 1:
-		if( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 254 ) ) state = 1;
+		if( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 31 ) || ( info.src.charCodeAt( pos ) >= 33 && info.src.charCodeAt( pos ) <= 40 ) || ( info.src.charCodeAt( pos ) >= 42 && info.src.charCodeAt( pos ) <= 254 ) ) state = 1;
 		else state = -1;
-		match = 7;
+		match = 6;
 		match_pos = pos;
 		break;
 
 	case 2:
-		if( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 254 ) ) state = 1;
+		if( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 31 ) || ( info.src.charCodeAt( pos ) >= 33 && info.src.charCodeAt( pos ) <= 40 ) || ( info.src.charCodeAt( pos ) >= 42 && info.src.charCodeAt( pos ) <= 254 ) ) state = 1;
 		else state = -1;
 		match = 1;
 		match_pos = pos;
 		break;
 
 	case 3:
-		state = -1;
-		match = 4;
+		if( info.src.charCodeAt( pos ) == 32 ) state = 11;
+		else state = -1;
+		match = 3;
 		match_pos = pos;
 		break;
 
@@ -102,66 +103,86 @@ switch( state )
 		break;
 
 	case 5:
-		if( ( info.src.charCodeAt( pos ) >= 48 && info.src.charCodeAt( pos ) <= 57 ) ) state = 11;
+		if( ( info.src.charCodeAt( pos ) >= 48 && info.src.charCodeAt( pos ) <= 57 ) ) state = 12;
 		else state = -1;
-		match = 5;
+		match = 4;
 		match_pos = pos;
 		break;
 
 	case 6:
 		if( ( info.src.charCodeAt( pos ) >= 48 && info.src.charCodeAt( pos ) <= 57 ) ) state = 6;
-		else if( info.src.charCodeAt( pos ) == 46 ) state = 11;
-		else if( info.src.charCodeAt( pos ) == 32 ) state = 13;
+		else if( info.src.charCodeAt( pos ) == 46 ) state = 12;
+		else if( info.src.charCodeAt( pos ) == 32 ) state = 16;
 		else state = -1;
-		match = 6;
+		match = 5;
 		match_pos = pos;
 		break;
 
 	case 7:
-		if( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 254 ) ) state = 1;
-		else state = -1;
-		match = 3;
+		state = -1;
+		match = 7;
 		match_pos = pos;
 		break;
 
 	case 8:
-		state = -1;
-		match = 8;
-		match_pos = pos;
+		if( info.src.charCodeAt( pos ) == 34 ) state = 7;
+		else if( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 33 ) || ( info.src.charCodeAt( pos ) >= 35 && info.src.charCodeAt( pos ) <= 254 ) ) state = 8;
+		else state = -1;
 		break;
 
 	case 9:
-		if( info.src.charCodeAt( pos ) == 34 ) state = 8;
-		else if( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 33 ) || ( info.src.charCodeAt( pos ) >= 35 && info.src.charCodeAt( pos ) <= 254 ) ) state = 9;
+		if( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 9 ) || ( info.src.charCodeAt( pos ) >= 11 && info.src.charCodeAt( pos ) <= 31 ) || ( info.src.charCodeAt( pos ) >= 33 && info.src.charCodeAt( pos ) <= 40 ) || ( info.src.charCodeAt( pos ) >= 42 && info.src.charCodeAt( pos ) <= 254 ) ) state = 1;
+		else if( info.src.charCodeAt( pos ) == 10 ) state = 2;
 		else state = -1;
+		match = 6;
+		match_pos = pos;
 		break;
 
 	case 10:
-		if( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 9 ) || ( info.src.charCodeAt( pos ) >= 11 && info.src.charCodeAt( pos ) <= 254 ) ) state = 1;
-		else if( info.src.charCodeAt( pos ) == 10 ) state = 2;
+		if( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 31 ) || ( info.src.charCodeAt( pos ) >= 33 && info.src.charCodeAt( pos ) <= 40 ) || ( info.src.charCodeAt( pos ) >= 42 && info.src.charCodeAt( pos ) <= 254 ) ) state = 1;
+		else if( info.src.charCodeAt( pos ) == 41 ) state = 4;
 		else state = -1;
-		match = 7;
+		match = 1;
 		match_pos = pos;
 		break;
 
 	case 11:
-		if( ( info.src.charCodeAt( pos ) >= 48 && info.src.charCodeAt( pos ) <= 57 ) ) state = 11;
-		else state = -1;
-		match = 6;
+		state = -1;
+		match = 3;
 		match_pos = pos;
 		break;
 
 	case 12:
-		if( info.src.charCodeAt( pos ) == 10 ) state = 2;
-		else if( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 9 ) || ( info.src.charCodeAt( pos ) >= 11 && info.src.charCodeAt( pos ) <= 254 ) ) state = 12;
+		if( ( info.src.charCodeAt( pos ) >= 48 && info.src.charCodeAt( pos ) <= 57 ) ) state = 12;
 		else state = -1;
-		match = 7;
+		match = 5;
 		match_pos = pos;
 		break;
 
 	case 13:
-		state = -1;
+		if( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 9 ) || ( info.src.charCodeAt( pos ) >= 11 && info.src.charCodeAt( pos ) <= 254 ) ) state = 13;
+		else if( info.src.charCodeAt( pos ) == 10 ) state = 15;
+		else state = -1;
+		break;
+
+	case 14:
+		if( info.src.charCodeAt( pos ) == 10 ) state = 2;
+		else if( info.src.charCodeAt( pos ) == 32 || info.src.charCodeAt( pos ) == 41 ) state = 13;
+		else if( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 9 ) || ( info.src.charCodeAt( pos ) >= 11 && info.src.charCodeAt( pos ) <= 31 ) || ( info.src.charCodeAt( pos ) >= 33 && info.src.charCodeAt( pos ) <= 40 ) || ( info.src.charCodeAt( pos ) >= 42 && info.src.charCodeAt( pos ) <= 254 ) ) state = 14;
+		else state = -1;
 		match = 6;
+		match_pos = pos;
+		break;
+
+	case 15:
+		state = -1;
+		match = 1;
+		match_pos = pos;
+		break;
+
+	case 16:
+		state = -1;
+		match = 5;
 		match_pos = pos;
 		break;
 
@@ -183,13 +204,13 @@ switch( state )
 		
 switch( match )
 {
-	case 6:
+	case 5:
 		{
 		 info.att = parseFloat( info.att ); 
 		}
 		break;
 
-	case 8:
+	case 7:
 		{
 		 info.att = info.att.substr( 1, info.att.length - 2 ); 
 		}
@@ -224,41 +245,39 @@ function __NODEJS_parse( src, err_off, err_la )
 /* Pop-Table */
 var pop_tab = new Array(
 	new Array( 0/* readonce' */, 1 ),
-	new Array( 10/* readonce */, 1 ),
-	new Array( 9/* sexpr */, 1 ),
-	new Array( 9/* sexpr */, 1 ),
-	new Array( 12/* list */, 2 ),
-	new Array( 12/* list */, 3 ),
-	new Array( 13/* members */, 2 ),
-	new Array( 13/* members */, 1 ),
-	new Array( 11/* atom */, 1 ),
-	new Array( 11/* atom */, 1 ),
-	new Array( 11/* atom */, 1 ),
-	new Array( 11/* atom */, 1 )
+	new Array( 9/* readonce */, 1 ),
+	new Array( 8/* sexpr */, 1 ),
+	new Array( 8/* sexpr */, 1 ),
+	new Array( 11/* list */, 2 ),
+	new Array( 11/* list */, 3 ),
+	new Array( 12/* members */, 2 ),
+	new Array( 12/* members */, 1 ),
+	new Array( 10/* atom */, 1 ),
+	new Array( 10/* atom */, 1 ),
+	new Array( 10/* atom */, 1 )
 );
 
 /* Action-Table */
 var act_tab = new Array(
-	/* State 0 */ new Array( 6/* "NUMBER" */,5 , 7/* "SYMBOL" */,6 , 8/* "STRING" */,7 , 3/* "SPACE" */,8 , 4/* "LPAREN" */,9 ),
-	/* State 1 */ new Array( 14/* "$" */,0 ),
-	/* State 2 */ new Array( 14/* "$" */,-1 ),
-	/* State 3 */ new Array( 14/* "$" */,-2 , 2/* "RPAREN" */,-2 , 6/* "NUMBER" */,-2 , 7/* "SYMBOL" */,-2 , 8/* "STRING" */,-2 , 3/* "SPACE" */,-2 , 4/* "LPAREN" */,-2 ),
-	/* State 4 */ new Array( 14/* "$" */,-3 , 2/* "RPAREN" */,-3 , 6/* "NUMBER" */,-3 , 7/* "SYMBOL" */,-3 , 8/* "STRING" */,-3 , 3/* "SPACE" */,-3 , 4/* "LPAREN" */,-3 ),
-	/* State 5 */ new Array( 14/* "$" */,-8 , 2/* "RPAREN" */,-8 , 6/* "NUMBER" */,-8 , 7/* "SYMBOL" */,-8 , 8/* "STRING" */,-8 , 3/* "SPACE" */,-8 , 4/* "LPAREN" */,-8 ),
-	/* State 6 */ new Array( 14/* "$" */,-9 , 2/* "RPAREN" */,-9 , 6/* "NUMBER" */,-9 , 7/* "SYMBOL" */,-9 , 8/* "STRING" */,-9 , 3/* "SPACE" */,-9 , 4/* "LPAREN" */,-9 ),
-	/* State 7 */ new Array( 14/* "$" */,-10 , 2/* "RPAREN" */,-10 , 6/* "NUMBER" */,-10 , 7/* "SYMBOL" */,-10 , 8/* "STRING" */,-10 , 3/* "SPACE" */,-10 , 4/* "LPAREN" */,-10 ),
-	/* State 8 */ new Array( 14/* "$" */,-11 , 2/* "RPAREN" */,-11 , 6/* "NUMBER" */,-11 , 7/* "SYMBOL" */,-11 , 8/* "STRING" */,-11 , 3/* "SPACE" */,-11 , 4/* "LPAREN" */,-11 ),
-	/* State 9 */ new Array( 2/* "RPAREN" */,11 , 6/* "NUMBER" */,5 , 7/* "SYMBOL" */,6 , 8/* "STRING" */,7 , 3/* "SPACE" */,8 , 4/* "LPAREN" */,9 ),
-	/* State 10 */ new Array( 2/* "RPAREN" */,14 , 6/* "NUMBER" */,5 , 7/* "SYMBOL" */,6 , 8/* "STRING" */,7 , 3/* "SPACE" */,8 , 4/* "LPAREN" */,9 ),
-	/* State 11 */ new Array( 14/* "$" */,-4 , 2/* "RPAREN" */,-4 , 6/* "NUMBER" */,-4 , 7/* "SYMBOL" */,-4 , 8/* "STRING" */,-4 , 3/* "SPACE" */,-4 , 4/* "LPAREN" */,-4 ),
-	/* State 12 */ new Array( 2/* "RPAREN" */,-7 , 6/* "NUMBER" */,-7 , 7/* "SYMBOL" */,-7 , 8/* "STRING" */,-7 , 3/* "SPACE" */,-7 , 4/* "LPAREN" */,-7 ),
-	/* State 13 */ new Array( 2/* "RPAREN" */,-6 , 6/* "NUMBER" */,-6 , 7/* "SYMBOL" */,-6 , 8/* "STRING" */,-6 , 3/* "SPACE" */,-6 , 4/* "LPAREN" */,-6 ),
-	/* State 14 */ new Array( 14/* "$" */,-5 , 2/* "RPAREN" */,-5 , 6/* "NUMBER" */,-5 , 7/* "SYMBOL" */,-5 , 8/* "STRING" */,-5 , 3/* "SPACE" */,-5 , 4/* "LPAREN" */,-5 )
+	/* State 0 */ new Array( 5/* "NUMBER" */,5 , 6/* "SYMBOL" */,6 , 7/* "STRING" */,7 , 3/* "LPAREN" */,8 ),
+	/* State 1 */ new Array( 13/* "$" */,0 ),
+	/* State 2 */ new Array( 13/* "$" */,-1 ),
+	/* State 3 */ new Array( 13/* "$" */,-2 , 2/* "RPAREN" */,-2 , 5/* "NUMBER" */,-2 , 6/* "SYMBOL" */,-2 , 7/* "STRING" */,-2 , 3/* "LPAREN" */,-2 ),
+	/* State 4 */ new Array( 13/* "$" */,-3 , 2/* "RPAREN" */,-3 , 5/* "NUMBER" */,-3 , 6/* "SYMBOL" */,-3 , 7/* "STRING" */,-3 , 3/* "LPAREN" */,-3 ),
+	/* State 5 */ new Array( 13/* "$" */,-8 , 2/* "RPAREN" */,-8 , 5/* "NUMBER" */,-8 , 6/* "SYMBOL" */,-8 , 7/* "STRING" */,-8 , 3/* "LPAREN" */,-8 ),
+	/* State 6 */ new Array( 13/* "$" */,-9 , 2/* "RPAREN" */,-9 , 5/* "NUMBER" */,-9 , 6/* "SYMBOL" */,-9 , 7/* "STRING" */,-9 , 3/* "LPAREN" */,-9 ),
+	/* State 7 */ new Array( 13/* "$" */,-10 , 2/* "RPAREN" */,-10 , 5/* "NUMBER" */,-10 , 6/* "SYMBOL" */,-10 , 7/* "STRING" */,-10 , 3/* "LPAREN" */,-10 ),
+	/* State 8 */ new Array( 2/* "RPAREN" */,10 , 5/* "NUMBER" */,5 , 6/* "SYMBOL" */,6 , 7/* "STRING" */,7 , 3/* "LPAREN" */,8 ),
+	/* State 9 */ new Array( 2/* "RPAREN" */,13 , 5/* "NUMBER" */,5 , 6/* "SYMBOL" */,6 , 7/* "STRING" */,7 , 3/* "LPAREN" */,8 ),
+	/* State 10 */ new Array( 13/* "$" */,-4 , 2/* "RPAREN" */,-4 , 5/* "NUMBER" */,-4 , 6/* "SYMBOL" */,-4 , 7/* "STRING" */,-4 , 3/* "LPAREN" */,-4 ),
+	/* State 11 */ new Array( 2/* "RPAREN" */,-7 , 5/* "NUMBER" */,-7 , 6/* "SYMBOL" */,-7 , 7/* "STRING" */,-7 , 3/* "LPAREN" */,-7 ),
+	/* State 12 */ new Array( 2/* "RPAREN" */,-6 , 5/* "NUMBER" */,-6 , 6/* "SYMBOL" */,-6 , 7/* "STRING" */,-6 , 3/* "LPAREN" */,-6 ),
+	/* State 13 */ new Array( 13/* "$" */,-5 , 2/* "RPAREN" */,-5 , 5/* "NUMBER" */,-5 , 6/* "SYMBOL" */,-5 , 7/* "STRING" */,-5 , 3/* "LPAREN" */,-5 )
 );
 
 /* Goto-Table */
 var goto_tab = new Array(
-	/* State 0 */ new Array( 10/* readonce */,1 , 9/* sexpr */,2 , 11/* atom */,3 , 12/* list */,4 ),
+	/* State 0 */ new Array( 9/* readonce */,1 , 8/* sexpr */,2 , 10/* atom */,3 , 11/* list */,4 ),
 	/* State 1 */ new Array(  ),
 	/* State 2 */ new Array(  ),
 	/* State 3 */ new Array(  ),
@@ -266,13 +285,12 @@ var goto_tab = new Array(
 	/* State 5 */ new Array(  ),
 	/* State 6 */ new Array(  ),
 	/* State 7 */ new Array(  ),
-	/* State 8 */ new Array(  ),
-	/* State 9 */ new Array( 13/* members */,10 , 9/* sexpr */,12 , 11/* atom */,3 , 12/* list */,4 ),
-	/* State 10 */ new Array( 9/* sexpr */,13 , 11/* atom */,3 , 12/* list */,4 ),
+	/* State 8 */ new Array( 12/* members */,9 , 8/* sexpr */,11 , 10/* atom */,3 , 11/* list */,4 ),
+	/* State 9 */ new Array( 8/* sexpr */,12 , 10/* atom */,3 , 11/* list */,4 ),
+	/* State 10 */ new Array(  ),
 	/* State 11 */ new Array(  ),
 	/* State 12 */ new Array(  ),
-	/* State 13 */ new Array(  ),
-	/* State 14 */ new Array(  )
+	/* State 13 */ new Array(  )
 );
 
 
@@ -282,7 +300,6 @@ var labels = new Array(
 	"readonce'" /* Non-terminal symbol */,
 	"WHITESPACE" /* Terminal symbol */,
 	"RPAREN" /* Terminal symbol */,
-	"SPACE" /* Terminal symbol */,
 	"LPAREN" /* Terminal symbol */,
 	"DOT" /* Terminal symbol */,
 	"NUMBER" /* Terminal symbol */,
@@ -313,7 +330,7 @@ var labels = new Array(
 	la = __NODEJS_lex( info );
 	while( true )
 	{
-		act = 16;
+		act = 15;
 		for( var i = 0; i < act_tab[sstack[sstack.length-1]].length; i+=2 )
 		{
 			if( act_tab[sstack[sstack.length-1]][i] == la )
@@ -336,7 +353,7 @@ var labels = new Array(
 		
 			
 		//Panic-mode: Try recovery when parse-error occurs!
-		if( act == 16 )
+		if( act == 15 )
 		{
 			if( NODEJS__dbg_withtrace )
 				__NODEJS_dbg_print( "Error detected: There is no reduce or shift on the symbol " + labels[la] );
@@ -356,7 +373,7 @@ var labels = new Array(
 				rvstack[i] = vstack[i];
 			}
 			
-			while( act == 16 && la != 14 )
+			while( act == 15 && la != 13 )
 			{
 				if( NODEJS__dbg_withtrace )
 					__NODEJS_dbg_print( "\tError recovery\n" +
@@ -365,7 +382,7 @@ var labels = new Array(
 				if( la == -1 )
 					info.offset++;
 					
-				while( act == 16 && sstack.length > 0 )
+				while( act == 15 && sstack.length > 0 )
 				{
 					sstack.pop();
 					vstack.pop();
@@ -373,7 +390,7 @@ var labels = new Array(
 					if( sstack.length == 0 )
 						break;
 						
-					act = 16;
+					act = 15;
 					for( var i = 0; i < act_tab[sstack[sstack.length-1]].length; i+=2 )
 					{
 						if( act_tab[sstack[sstack.length-1]][i] == la )
@@ -384,7 +401,7 @@ var labels = new Array(
 					}
 				}
 				
-				if( act != 16 )
+				if( act != 15 )
 					break;
 				
 				for( var i = 0; i < rsstack.length; i++ )
@@ -396,7 +413,7 @@ var labels = new Array(
 				la = __NODEJS_lex( info );
 			}
 			
-			if( act == 16 )
+			if( act == 15 )
 			{
 				if( NODEJS__dbg_withtrace )
 					__NODEJS_dbg_print( "\tError recovery failed, terminating parse process..." );
@@ -409,7 +426,7 @@ var labels = new Array(
 		}
 		
 		/*
-		if( act == 16 )
+		if( act == 15 )
 			break;
 		*/
 		
@@ -498,11 +515,6 @@ switch( act )
 		 rval = create_string(vstack[ vstack.length - 1 ]); 
 	}
 	break;
-	case 11:
-	{
-		rval = vstack[ vstack.length - 1 ];
-	}
-	break;
 }
 
 
@@ -560,23 +572,20 @@ var error_offsets = new Array();
 var error_lookaheads = new Array();
 var error_count = 0;
 
-/* Switching one of these variables on will enable debug facilities
-        of the various parser drivers */
-//NODEJS__dbg_withtrace = true;
-//NODEJS__dbg_withparsetree = true;
-//NODEJS__dbg_withstepbystep = true;
 
 console.log("Welcome to the Scheme REPL by Travis Hoover\n");
 
 process.stdin.resume();
-process.stdin.setEncoding('utf8'); 
+process.stdin.setEncoding('utf8');
 process.stdout.write("> ");
 
 process.stdin.on('data', function (text) {
 
+    // ( R )
+
     if( text.trim() != "" ) {
     
-        // Send text to scheme lex
+        // send text to scheme tokenizer ( E )
         if( ( error_count = __NODEJS_parse( text.trim(), error_offsets, error_lookaheads ) ) > 0 ) {
        
             for( var i = 0; i < error_count; i++ )
@@ -584,11 +593,11 @@ process.stdin.on('data', function (text) {
         }
         else {
       
-            console.log('> ' + JSON.stringify(result)); // print the read stage text back as the print stage
-            console.log(text);
+            console.log('> ' + JSON.stringify(result)); // print the internal json structure
+            console.log(text); // print the read stage text back as the print stage ( P )
         }
     }
 
-    process.stdout.write("> "); // now loop or wait for user input again
+    process.stdout.write("> "); // now loop or wait for user input again ( L )
 });
 

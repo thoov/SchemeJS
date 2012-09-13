@@ -18,13 +18,12 @@ var array_append = function (x, y) { return [x,y]; }
 ;
 
 /~ Token pattern matching rules ~/
-    '\)'    RPAREN
-    '\s'     SPACE
-    '\('    LPAREN
-    '\.'    DOT
+    '[ ]?\)'    RPAREN
+    '\([ ]?'    LPAREN
+    '\.'        DOT
     '[0-9]+[ ]?|[0-9]+\.[0-9]*|[0-9]*\.[0-9]+'    NUMBER   [* %match = parseFloat( %match ); *]
-    '[^\(\)0-9\.\'\`\,\@"].*'                 SYMBOL   /~ symbols cannot begin with digits, parens, quotes, dots, etc. ~/
-    '\"[^"]*\"'                               STRING   [* %match = %match.substr( 1, %match.length - 2 ); *]
+    '[^\(\)0-9\.\'\`\,\@"][^\) ]*'                SYMBOL   /~ symbols cannot begin with digits, parens, quotes, dots, etc. ~/
+    '\"[^"]*\"'                                   STRING   [* %match = %match.substr( 1, %match.length - 2 ); *]
   ;
 
 ##
@@ -48,7 +47,6 @@ members:    members sexpr                            [* %% = array_append(%1, %2
 atom:       NUMBER                                   [* %% = create_number(%1); *]
             | SYMBOL                                 [* %% = create_symbol(%1); *]
             | STRING                                 [* %% = create_string(%1); *]
-            | SPACE
             ;
             
 
@@ -58,23 +56,20 @@ var error_offsets = new Array();
 var error_lookaheads = new Array();
 var error_count = 0;
 
-/* Switching one of these variables on will enable debug facilities
-        of the various parser drivers */
-//##PREFIX##_dbg_withtrace = true;
-//##PREFIX##_dbg_withparsetree = true;
-//##PREFIX##_dbg_withstepbystep = true;
 
 console.log("Welcome to the Scheme REPL by Travis Hoover\n");
 
 process.stdin.resume();
-process.stdin.setEncoding('utf8'); 
+process.stdin.setEncoding('utf8');
 process.stdout.write("> ");
 
 process.stdin.on('data', function (text) {
 
+    // ( R )
+
     if( text.trim() != "" ) {
     
-        // Send text to scheme lex
+        // send text to scheme tokenizer ( E )
         if( ( error_count = __NODEJS_parse( text.trim(), error_offsets, error_lookaheads ) ) > 0 ) {
        
             for( var i = 0; i < error_count; i++ )
@@ -82,11 +77,11 @@ process.stdin.on('data', function (text) {
         }
         else {
       
-            console.log('> ' + JSON.stringify(result)); // print the read stage text back as the print stage
-            console.log(text);
+            console.log('> ' + JSON.stringify(result)); // print the internal json structure
+            console.log(text); // print the read stage text back as the print stage ( P )
         }
     }
 
-    process.stdout.write("> "); // now loop or wait for user input again
+    process.stdout.write("> "); // now loop or wait for user input again ( L )
 });
 *]
