@@ -6,8 +6,40 @@ var create_null = function () { return { type:'NULL' }; }
 var create_string = function (x) { return { type:'STRING', val:x }; }
 var create_symbol = function (x) { return { type:'SYMBOL', val:x }; }
 var create_number = function (x) { return { type:"NUMBER", val:x }; }
-var create_list = function (x) { return { type:'LIST', val:[x] }; }
-var array_append = function (x, y) { return [x,y]; }
+var create_list = function (x) { 
+    
+    if (x instanceof Array) {
+        
+        return { type:'LIST', val:x };
+    }
+    
+    return { type:'LIST', val:[x] }; 
+}
+var create_dot_list = function (x, y) { 
+    
+    var array = [x];
+        
+    for ( var i = 0; i < y.val.length; i++ ) {
+        
+        array.push(y.val[i]);
+    }
+    
+    
+    return { type:'LIST', val:array }; 
+
+}
+var array_append = function (x, y) { 
+    
+    
+    if( x instanceof Array )
+    {
+        x.push(y);
+        return x;
+    }
+    
+    return [x,y]; 
+    
+}
 
 *]
 
@@ -22,7 +54,7 @@ var array_append = function (x, y) { return [x,y]; }
     '\([ ]?'    LPAREN
     '\.'        DOT
     '[0-9]+[ ]?|[0-9]+\.[0-9]*|[0-9]*\.[0-9]+'    NUMBER   [* %match = parseFloat( %match ); *]
-    '[^\(\)0-9\.\'\`\,\@" ][^\) ]*'                SYMBOL   /~ symbols cannot begin with digits, parens, quotes, dots, etc. ~/
+    '[^\(\)0-9\.\'\`\,\@" ][^\) ]*'               SYMBOL   /~ symbols cannot begin with digits, parens, quotes, dots, etc. ~/
     '\"[^"]*\"'                                   STRING   [* %match = %match.substr( 1, %match.length - 2 ); *]
   ;
 
@@ -38,6 +70,7 @@ sexpr:      atom
 
 list:       LPAREN RPAREN	                         [* %% = create_null(); *]
 	        | LPAREN members RPAREN                  [* %% = create_list(%2) *]
+	        | LPAREN members DOT sexpr RPAREN        [* %% = create_dot_list(%2, %4); *]
             ;
 
 members:    members sexpr                            [* %% = array_append(%1, %2); *]

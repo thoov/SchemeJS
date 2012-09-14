@@ -6,8 +6,40 @@ var create_null = function () { return { type:'NULL' }; }
 var create_string = function (x) { return { type:'STRING', val:x }; }
 var create_symbol = function (x) { return { type:'SYMBOL', val:x }; }
 var create_number = function (x) { return { type:"NUMBER", val:x }; }
-var create_list = function (x) { return { type:'LIST', val:[x] }; }
-var array_append = function (x, y) { return [x,y]; }
+var create_list = function (x) { 
+    
+    if (x instanceof Array) {
+        
+        return { type:'LIST', val:x };
+    }
+    
+    return { type:'LIST', val:[x] }; 
+}
+var create_dot_list = function (x, y) { 
+    
+    var array = [x];
+        
+    for ( var i = 0; i < y.val.length; i++ ) {
+        
+        array.push(y.val[i]);
+    }
+    
+    
+    return { type:'LIST', val:array }; 
+
+}
+var array_append = function (x, y) { 
+    
+    
+    if( x instanceof Array )
+    {
+        x.push(y);
+        return x;
+    }
+    
+    return [x,y]; 
+    
+}
 
 
 /*
@@ -249,6 +281,7 @@ var pop_tab = new Array(
 	new Array( 8/* sexpr */, 1 ),
 	new Array( 11/* list */, 2 ),
 	new Array( 11/* list */, 3 ),
+	new Array( 11/* list */, 5 ),
 	new Array( 12/* members */, 2 ),
 	new Array( 12/* members */, 1 ),
 	new Array( 10/* atom */, 1 ),
@@ -261,17 +294,20 @@ var act_tab = new Array(
 	/* State 0 */ new Array( 5/* "NUMBER" */,5 , 6/* "SYMBOL" */,6 , 7/* "STRING" */,7 , 3/* "LPAREN" */,8 ),
 	/* State 1 */ new Array( 13/* "$" */,0 ),
 	/* State 2 */ new Array( 13/* "$" */,-1 ),
-	/* State 3 */ new Array( 13/* "$" */,-2 , 2/* "RPAREN" */,-2 , 5/* "NUMBER" */,-2 , 6/* "SYMBOL" */,-2 , 7/* "STRING" */,-2 , 3/* "LPAREN" */,-2 ),
-	/* State 4 */ new Array( 13/* "$" */,-3 , 2/* "RPAREN" */,-3 , 5/* "NUMBER" */,-3 , 6/* "SYMBOL" */,-3 , 7/* "STRING" */,-3 , 3/* "LPAREN" */,-3 ),
-	/* State 5 */ new Array( 13/* "$" */,-8 , 2/* "RPAREN" */,-8 , 5/* "NUMBER" */,-8 , 6/* "SYMBOL" */,-8 , 7/* "STRING" */,-8 , 3/* "LPAREN" */,-8 ),
-	/* State 6 */ new Array( 13/* "$" */,-9 , 2/* "RPAREN" */,-9 , 5/* "NUMBER" */,-9 , 6/* "SYMBOL" */,-9 , 7/* "STRING" */,-9 , 3/* "LPAREN" */,-9 ),
-	/* State 7 */ new Array( 13/* "$" */,-10 , 2/* "RPAREN" */,-10 , 5/* "NUMBER" */,-10 , 6/* "SYMBOL" */,-10 , 7/* "STRING" */,-10 , 3/* "LPAREN" */,-10 ),
+	/* State 3 */ new Array( 13/* "$" */,-2 , 2/* "RPAREN" */,-2 , 4/* "DOT" */,-2 , 5/* "NUMBER" */,-2 , 6/* "SYMBOL" */,-2 , 7/* "STRING" */,-2 , 3/* "LPAREN" */,-2 ),
+	/* State 4 */ new Array( 13/* "$" */,-3 , 2/* "RPAREN" */,-3 , 4/* "DOT" */,-3 , 5/* "NUMBER" */,-3 , 6/* "SYMBOL" */,-3 , 7/* "STRING" */,-3 , 3/* "LPAREN" */,-3 ),
+	/* State 5 */ new Array( 13/* "$" */,-9 , 2/* "RPAREN" */,-9 , 4/* "DOT" */,-9 , 5/* "NUMBER" */,-9 , 6/* "SYMBOL" */,-9 , 7/* "STRING" */,-9 , 3/* "LPAREN" */,-9 ),
+	/* State 6 */ new Array( 13/* "$" */,-10 , 2/* "RPAREN" */,-10 , 4/* "DOT" */,-10 , 5/* "NUMBER" */,-10 , 6/* "SYMBOL" */,-10 , 7/* "STRING" */,-10 , 3/* "LPAREN" */,-10 ),
+	/* State 7 */ new Array( 13/* "$" */,-11 , 2/* "RPAREN" */,-11 , 4/* "DOT" */,-11 , 5/* "NUMBER" */,-11 , 6/* "SYMBOL" */,-11 , 7/* "STRING" */,-11 , 3/* "LPAREN" */,-11 ),
 	/* State 8 */ new Array( 2/* "RPAREN" */,10 , 5/* "NUMBER" */,5 , 6/* "SYMBOL" */,6 , 7/* "STRING" */,7 , 3/* "LPAREN" */,8 ),
-	/* State 9 */ new Array( 2/* "RPAREN" */,13 , 5/* "NUMBER" */,5 , 6/* "SYMBOL" */,6 , 7/* "STRING" */,7 , 3/* "LPAREN" */,8 ),
-	/* State 10 */ new Array( 13/* "$" */,-4 , 2/* "RPAREN" */,-4 , 5/* "NUMBER" */,-4 , 6/* "SYMBOL" */,-4 , 7/* "STRING" */,-4 , 3/* "LPAREN" */,-4 ),
-	/* State 11 */ new Array( 2/* "RPAREN" */,-7 , 5/* "NUMBER" */,-7 , 6/* "SYMBOL" */,-7 , 7/* "STRING" */,-7 , 3/* "LPAREN" */,-7 ),
-	/* State 12 */ new Array( 2/* "RPAREN" */,-6 , 5/* "NUMBER" */,-6 , 6/* "SYMBOL" */,-6 , 7/* "STRING" */,-6 , 3/* "LPAREN" */,-6 ),
-	/* State 13 */ new Array( 13/* "$" */,-5 , 2/* "RPAREN" */,-5 , 5/* "NUMBER" */,-5 , 6/* "SYMBOL" */,-5 , 7/* "STRING" */,-5 , 3/* "LPAREN" */,-5 )
+	/* State 9 */ new Array( 2/* "RPAREN" */,13 , 4/* "DOT" */,14 , 5/* "NUMBER" */,5 , 6/* "SYMBOL" */,6 , 7/* "STRING" */,7 , 3/* "LPAREN" */,8 ),
+	/* State 10 */ new Array( 13/* "$" */,-4 , 2/* "RPAREN" */,-4 , 4/* "DOT" */,-4 , 5/* "NUMBER" */,-4 , 6/* "SYMBOL" */,-4 , 7/* "STRING" */,-4 , 3/* "LPAREN" */,-4 ),
+	/* State 11 */ new Array( 2/* "RPAREN" */,-8 , 4/* "DOT" */,-8 , 5/* "NUMBER" */,-8 , 6/* "SYMBOL" */,-8 , 7/* "STRING" */,-8 , 3/* "LPAREN" */,-8 ),
+	/* State 12 */ new Array( 2/* "RPAREN" */,-7 , 4/* "DOT" */,-7 , 5/* "NUMBER" */,-7 , 6/* "SYMBOL" */,-7 , 7/* "STRING" */,-7 , 3/* "LPAREN" */,-7 ),
+	/* State 13 */ new Array( 13/* "$" */,-5 , 2/* "RPAREN" */,-5 , 4/* "DOT" */,-5 , 5/* "NUMBER" */,-5 , 6/* "SYMBOL" */,-5 , 7/* "STRING" */,-5 , 3/* "LPAREN" */,-5 ),
+	/* State 14 */ new Array( 5/* "NUMBER" */,5 , 6/* "SYMBOL" */,6 , 7/* "STRING" */,7 , 3/* "LPAREN" */,8 ),
+	/* State 15 */ new Array( 2/* "RPAREN" */,16 ),
+	/* State 16 */ new Array( 13/* "$" */,-6 , 2/* "RPAREN" */,-6 , 4/* "DOT" */,-6 , 5/* "NUMBER" */,-6 , 6/* "SYMBOL" */,-6 , 7/* "STRING" */,-6 , 3/* "LPAREN" */,-6 )
 );
 
 /* Goto-Table */
@@ -289,7 +325,10 @@ var goto_tab = new Array(
 	/* State 10 */ new Array(  ),
 	/* State 11 */ new Array(  ),
 	/* State 12 */ new Array(  ),
-	/* State 13 */ new Array(  )
+	/* State 13 */ new Array(  ),
+	/* State 14 */ new Array( 8/* sexpr */,15 , 10/* atom */,3 , 11/* list */,4 ),
+	/* State 15 */ new Array(  ),
+	/* State 16 */ new Array(  )
 );
 
 
@@ -329,7 +368,7 @@ var labels = new Array(
 	la = __NODEJS_lex( info );
 	while( true )
 	{
-		act = 15;
+		act = 18;
 		for( var i = 0; i < act_tab[sstack[sstack.length-1]].length; i+=2 )
 		{
 			if( act_tab[sstack[sstack.length-1]][i] == la )
@@ -352,7 +391,7 @@ var labels = new Array(
 		
 			
 		//Panic-mode: Try recovery when parse-error occurs!
-		if( act == 15 )
+		if( act == 18 )
 		{
 			if( NODEJS__dbg_withtrace )
 				__NODEJS_dbg_print( "Error detected: There is no reduce or shift on the symbol " + labels[la] );
@@ -372,7 +411,7 @@ var labels = new Array(
 				rvstack[i] = vstack[i];
 			}
 			
-			while( act == 15 && la != 13 )
+			while( act == 18 && la != 13 )
 			{
 				if( NODEJS__dbg_withtrace )
 					__NODEJS_dbg_print( "\tError recovery\n" +
@@ -381,7 +420,7 @@ var labels = new Array(
 				if( la == -1 )
 					info.offset++;
 					
-				while( act == 15 && sstack.length > 0 )
+				while( act == 18 && sstack.length > 0 )
 				{
 					sstack.pop();
 					vstack.pop();
@@ -389,7 +428,7 @@ var labels = new Array(
 					if( sstack.length == 0 )
 						break;
 						
-					act = 15;
+					act = 18;
 					for( var i = 0; i < act_tab[sstack[sstack.length-1]].length; i+=2 )
 					{
 						if( act_tab[sstack[sstack.length-1]][i] == la )
@@ -400,7 +439,7 @@ var labels = new Array(
 					}
 				}
 				
-				if( act != 15 )
+				if( act != 18 )
 					break;
 				
 				for( var i = 0; i < rsstack.length; i++ )
@@ -412,7 +451,7 @@ var labels = new Array(
 				la = __NODEJS_lex( info );
 			}
 			
-			if( act == 15 )
+			if( act == 18 )
 			{
 				if( NODEJS__dbg_withtrace )
 					__NODEJS_dbg_print( "\tError recovery failed, terminating parse process..." );
@@ -425,7 +464,7 @@ var labels = new Array(
 		}
 		
 		/*
-		if( act == 15 )
+		if( act == 18 )
 			break;
 		*/
 		
@@ -491,25 +530,30 @@ switch( act )
 	break;
 	case 6:
 	{
-		 rval = array_append(vstack[ vstack.length - 2 ], vstack[ vstack.length - 1 ]); 
+		 rval = create_dot_list(vstack[ vstack.length - 4 ], vstack[ vstack.length - 2 ]); 
 	}
 	break;
 	case 7:
 	{
-		 rval = vstack[ vstack.length - 1 ]; 
+		 rval = array_append(vstack[ vstack.length - 2 ], vstack[ vstack.length - 1 ]); 
 	}
 	break;
 	case 8:
 	{
-		 rval = create_number(vstack[ vstack.length - 1 ]); 
+		 rval = vstack[ vstack.length - 1 ]; 
 	}
 	break;
 	case 9:
 	{
-		 rval = create_symbol(vstack[ vstack.length - 1 ]); 
+		 rval = create_number(vstack[ vstack.length - 1 ]); 
 	}
 	break;
 	case 10:
+	{
+		 rval = create_symbol(vstack[ vstack.length - 1 ]); 
+	}
+	break;
+	case 11:
 	{
 		 rval = create_string(vstack[ vstack.length - 1 ]); 
 	}
