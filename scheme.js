@@ -8,38 +8,33 @@ var create_symbol = function (x) { return { type:'SYMBOL', val:x }; }
 var create_number = function (x) { return { type:"NUMBER", val:x }; }
 var create_list = function (x) { 
     
-    if (x instanceof Array) {
-        
-        return { type:'LIST', val:x };
-    }
+    if ( isArray(x) ) { return { type:'LIST', val:x }; }
     
     return { type:'LIST', val:[x] }; 
 }
 var create_dot_list = function (x, y) { 
     
-    var array = [x];
-        
+    var array = null;
+    
+    if ( isArray(x) ) { array = x; }
+    else { array = [x]; }
+    
+    
     for ( var i = 0; i < y.val.length; i++ ) {
         
         array.push(y.val[i]);
     }
-    
-    
-    return { type:'LIST', val:array }; 
 
+    return { type:'LIST', val:array };
 }
 var array_append = function (x, y) { 
     
+    if( isArray(x) ) { x.push(y); return x; }
     
-    if( x instanceof Array )
-    {
-        x.push(y);
-        return x;
-    }
-    
-    return [x,y]; 
-    
+    return [x,y];    
 }
+
+var isArray = function (x) { return ( x instanceof Array ); }
 
 
 /*
