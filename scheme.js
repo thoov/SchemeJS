@@ -16,9 +16,9 @@ var create_dot_list = function (x, y) {
     
     var array = []; // this holds the "proper" array
     
-    //if ( isArray(x) ) { array = x; console.log("HERE");}
-    //else { array = [x]; }
-    
+    //
+    // Before the dot
+    //
     if ( isArray(x.val) ) {
         for ( var i = 0; i < x.val.length; i++ ) {
             array.push(x.val[i]);
@@ -26,23 +26,16 @@ var create_dot_list = function (x, y) {
     }
     else { array.push(x); }
     
+    //
+    // After the dot
+    //
     if ( isArray(y.val) ) {
         for ( var i = 0; i < y.val.length; i++ ) {
             array.push(y.val[i]);
         }
     }
     else { array.push(y); }
-    /*
-  
-    if ( isArray(y) ) { 
-        for ( var i = 0; i < y.val.length; i++ ) {
-            
-            array.push(y.val[i]);
-        }
-    }
-    else {
-        array.push(y);
-    }*/
+
     return { type:'LIST', val:array };
 }
 var array_append = function (x, y) { 
@@ -627,18 +620,24 @@ switch( act )
 var error_offsets = new Array();
 var error_lookaheads = new Array();
 var error_count = 0;
+var DEBUG = false;
 
-
-console.log("Welcome to the Scheme REPL by Travis Hoover\n");
+console.log("Welcome to the Scheme REPL by Travis Hoover");
 
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
 process.stdout.write("> ");
 
+process.argv.forEach(function (val, index, array) {
+    if( val === '--debug' || val === '-d' ){
+        DEBUG = true;
+    }
+});
+
 process.stdin.on('data', function (text) {
 
     // ( R )
-
+    
     if( text.trim() != "" ) {
     
         // send text to scheme tokenizer ( E )
@@ -649,11 +648,10 @@ process.stdin.on('data', function (text) {
         }
         else {
       
-            console.log('> ' + JSON.stringify(result)); // print the internal json structure
-            console.log(text); // print the read stage text back as the print stage ( P )
+            if (DEBUG) { console.log('> ' + JSON.stringify(result)); } // print the internal json structure
+            process.stdout.write(text); // print the read stage text back as the print stage ( P )
         }
     }
-
     process.stdout.write("> "); // now loop or wait for user input again ( L )
 });
 
