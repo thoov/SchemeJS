@@ -14,17 +14,35 @@ var create_list = function (x) {
 }
 var create_dot_list = function (x, y) { 
     
-    var array = null;
+    var array = []; // this holds the "proper" array
     
-    if ( isArray(x) ) { array = x; }
-    else { array = [x]; }
+    //if ( isArray(x) ) { array = x; console.log("HERE");}
+    //else { array = [x]; }
     
-    
-    for ( var i = 0; i < y.val.length; i++ ) {
-        
-        array.push(y.val[i]);
+    if ( isArray(x.val) ) {
+        for ( var i = 0; i < x.val.length; i++ ) {
+            array.push(x.val[i]);
+        }
     }
-
+    else { array.push(x); }
+    
+    if ( isArray(y.val) ) {
+        for ( var i = 0; i < y.val.length; i++ ) {
+            array.push(y.val[i]);
+        }
+    }
+    else { array.push(y); }
+    /*
+  
+    if ( isArray(y) ) { 
+        for ( var i = 0; i < y.val.length; i++ ) {
+            
+            array.push(y.val[i]);
+        }
+    }
+    else {
+        array.push(y);
+    }*/
     return { type:'LIST', val:array };
 }
 var array_append = function (x, y) { 
