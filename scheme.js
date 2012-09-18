@@ -1,10 +1,34 @@
- // Javascript code used the evaluation part of the REPL
+ // Author: Travis Hoover, thoov7@gmail.com
 
-var STANDARD_FUNCTIONS = ["DEFINE", "+"];
+//
+// Look up and see if a token identifier has previously been defined.
+//
+var STANDARD_FUNCTIONS = ["DEFINE", "+", "-", "*", "/"];
+var standardLibLookup = function ( token ) {
+
+    if( STANDARD_FUNCTIONS.indexOf( token ) !== -1 ) return token;
+    return false; 
+}
+//
+// Look up and see if a token identifier has previously been defined.
+//
 var VARIABLES = [];
+var variableLookup = function ( token ) {
 
-VARIABLES["TESTING"] = 23;
-VARIABLES["FOOBAR"] = 27;
+    if ( VARIABLES[token] !== null ) return VARIABLES[token];
+    return false;
+}
+
+
+
+//
+// Predefined constants such as pi.
+//
+VARIABLES["PI"] = 3.14;
+
+
+
+
 
 
 var SYMBOL = "SYMBOL";
@@ -14,46 +38,36 @@ var LIST = "LIST";
 
 //
 // Go through the list and turn identifiers into values.
-// Keep standard function identifiers
+// Keep standard function identifiers and handle the special case of define.
 //
-
-
 var standardize = function ( tokenized ) { 
 
     if ( tokenized.type.toUpperCase() === LIST ) {
         
         var array = [];
 
-                    
         // move down the stack and 'pop' the list off of the stack
         for ( var i = 0; i < tokenized.val.length; i++ ) {
             
-            if( (tokenized.val[0].val.toUpperCase() == "DEFINE" && i == 1) ) {
-                array.push(tokenized.val[i]); 
-            }
-            else {
-                array.push(standardize( tokenized.val[i] ));
-            }
-        
+            //
+            //  If the define symbol is first then the next token is special so dont eval it.
+            //
+            if ( tokenized.val[0].val.toUpperCase() == "DEFINE" && i == 1 ) array.push(tokenized.val[i]); 
+            else array.push(standardize( tokenized.val[i] ));    
         }
                 
         return array;
     }
     else if ( tokenized.type.toUpperCase() === SYMBOL ) {
         
-        // loop up the symbol in the standard lib or the global var table
-        if ( standardLib(tokenized.val.toUpperCase()) ) {
-            
-            return standardLib(tokenized.val.toUpperCase());
-            
-        } else if ( variableLookup(tokenized.val.toUpperCase().trim()) ) {
-            
-            return variableLookup(tokenized.val.toUpperCase());
-        }
+        //
+        // Check to see if the identifier is a standard library or variable.
+        //
+        if ( standardLibLookup(tokenized.val.toUpperCase()) ) return standardLibLookup(tokenized.val.toUpperCase());
+        else if ( variableLookup(tokenized.val.toUpperCase().trim()) ) return variableLookup(tokenized.val.toUpperCase());
         else {
-            
             console.log("Unidentified identifier: " + tokenized.val);
-            process.exit(1);
+            return "ERROR";
         }
     }
     else {
@@ -64,37 +78,35 @@ var standardize = function ( tokenized ) {
 }
 
 
-
-
-//
-// At this point every list should start with a symbol followed by numbers or strings. 
-//
-
-
-
-var standardLib = function ( token ) {
-        
-    if( STANDARD_FUNCTIONS.indexOf( token ) !== -1 ) {
-        
-        return token;
+var eval = function ( standardized ) {
+    
+    var opperation = standardized[0];
+    var result = null;
+    
+    
+    for ( var i = 1; i < standardized.length; i++ ) {
+       
+        if( standardized[i] instanceof Array ) {
+            
+            //console.log(standardized[i]);
+            result += eval(standardized[i]);
+        }
+        else {
+            result += standardized[i];   
+        }
     }
     
-    return false; 
+    return result;
 }
 
-var variableLookup = function ( token ) {
-        
-    if ( VARIABLES[token] !== null ) {
-        
-        return VARIABLES[token];
-    }
-    
-    return false;
-}
+
+
+
 
 
 var tokenized = null;
 
+var createItem = function (identifier, value) { return {type:identifier.toUpperCase, val:value}; };
 var create_null = function () { return { type:'NULL' }; }
 var create_string = function (x) { return { type:'STRING', val:x }; }
 var create_symbol = function (x) { return { type:SYMBOL, val:x }; }
@@ -748,7 +760,12 @@ process.stdin.on('data', function (text) {
                 
                 console.log('> ');
                 console.log('> Standardized: ');
-                console.log(standardize(tokenized));
+                var standard = standardize(tokenized)
+                console.log(standard);
+                
+                console.log('> ');
+                console.log('> Eval: ');
+                console.log(eval(standard));
                 //console.log(tokenized);
             
             } // print the internal json structure
