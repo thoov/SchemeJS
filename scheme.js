@@ -1,10 +1,103 @@
+ // Javascript code used the evaluation part of the REPL
+
+var STANDARD_FUNCTIONS = ["DEFINE", "+"];
+var VARIABLES = [];
+
+VARIABLES["TESTING"] = 23;
+VARIABLES["FOOBAR"] = 27;
 
 
-var result = null;
+var SYMBOL = "SYMBOL";
+var LIST = "LIST";
+
+
+
+//
+// Go through the list and turn identifiers into values.
+// Keep standard function identifiers
+//
+
+
+var standardize = function ( tokenized ) { 
+
+    if ( tokenized.type.toUpperCase() === LIST ) {
+        
+        var array = [];
+
+                    
+        // move down the stack and 'pop' the list off of the stack
+        for ( var i = 0; i < tokenized.val.length; i++ ) {
+            
+            if( (tokenized.val[0].val.toUpperCase() == "DEFINE" && i == 1) ) {
+                array.push(tokenized.val[i]); 
+            }
+            else {
+                array.push(standardize( tokenized.val[i] ));
+            }
+        
+        }
+                
+        return array;
+    }
+    else if ( tokenized.type.toUpperCase() === SYMBOL ) {
+        
+        // loop up the symbol in the standard lib or the global var table
+        if ( standardLib(tokenized.val.toUpperCase()) ) {
+            
+            return standardLib(tokenized.val.toUpperCase());
+            
+        } else if ( variableLookup(tokenized.val.toUpperCase().trim()) ) {
+            
+            return variableLookup(tokenized.val.toUpperCase());
+        }
+        else {
+            
+            console.log("Unidentified identifier: " + tokenized.val);
+            process.exit(1);
+        }
+    }
+    else {
+        
+        console.log("The token we are looking at is either a string or a number: " + tokenized.val);
+        return tokenized.val;
+    } 
+}
+
+
+
+
+//
+// At this point every list should start with a symbol followed by numbers or strings. 
+//
+
+
+
+var standardLib = function ( token ) {
+        
+    if( STANDARD_FUNCTIONS.indexOf( token ) !== -1 ) {
+        
+        return token;
+    }
+    
+    return false; 
+}
+
+var variableLookup = function ( token ) {
+        
+    if ( VARIABLES[token] !== null ) {
+        
+        return VARIABLES[token];
+    }
+    
+    return false;
+}
+
+
+var tokenized = null;
 
 var create_null = function () { return { type:'NULL' }; }
 var create_string = function (x) { return { type:'STRING', val:x }; }
-var create_symbol = function (x) { return { type:'SYMBOL', val:x }; }
+var create_symbol = function (x) { return { type:SYMBOL, val:x }; }
 var create_number = function (x) { return { type:"NUMBER", val:x }; }
 var create_list = function (x) { 
     
@@ -511,7 +604,7 @@ switch( act )
 	break;
 	case 1:
 	{
-		 result = vstack[ vstack.length - 1 ]; 
+		 tokenized = vstack[ vstack.length - 1 ]; 
 	}
 	break;
 	case 2:
@@ -648,7 +741,17 @@ process.stdin.on('data', function (text) {
         }
         else {
       
-            if (DEBUG) { console.log('> ' + JSON.stringify(result)); } // print the internal json structure
+            if (DEBUG) { 
+                
+                console.log('> Tokenized: ');
+                console.log('> ' + JSON.stringify(tokenized)); 
+                
+                console.log('> ');
+                console.log('> Standardized: ');
+                console.log(standardize(tokenized));
+                //console.log(tokenized);
+            
+            } // print the internal json structure
             process.stdout.write(text); // print the read stage text back as the print stage ( P )
         }
     }
