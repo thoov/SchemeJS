@@ -86,13 +86,41 @@ var eval = function ( standardized ) {
     
     for ( var i = 1; i < standardized.length; i++ ) {
        
-        if( standardized[i] instanceof Array ) {
-            
-            //console.log(standardized[i]);
-            result += eval(standardized[i]);
+        if ( i === 1 ) {
+            result = standardized[i];
         }
         else {
-            result += standardized[i];   
+       
+            if( standardized[i] instanceof Array ) {
+                
+                if( opperation == "+") {
+                    result += eval(standardized[i]);
+                }
+                else if (opperation == "-"){
+                    result -= eval(standardized[i]);
+                }
+                else if(opperation == "*") {
+                    result *= eval(standardized[i]);
+                }
+                else if (opperation == "/") {
+                    result /= eval(standardized[i]);
+                }
+            }
+            else {
+                if( opperation == "+") {
+                    result += standardized[i];
+                }
+                else if (opperation == "-"){
+                    result -= standardized[i];
+                }
+                else if(opperation == "*") {
+                    result *= standardized[i];
+                }
+                else if (opperation == "/") {
+                    result /= standardized[i];
+                }   
+            }
+        
         }
     }
     
