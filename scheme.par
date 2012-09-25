@@ -202,8 +202,6 @@ primfns[4] = function (sexpr) {
     var parameters = sexpr[1]; // The second token is the variable being defined.
     var body = sexpr[2]; // The third element is the expression of the function.
     
-    console.log({ type:'LAMBDA', parameters:parameters.val, expression:body.val });
-
     return { type:'LAMBDA', parameters:parameters.val, expression:body.val };
 }
 
@@ -312,7 +310,6 @@ var eval = function( SEXPR ) {
         }
         else if (lookupValue.type === 'LAMBDA') {
 
-            console.log(parentExpression);
             return evalLambda( parentExpression, lookupValue );
         }
         else if (lookupValue.type !== 'NULL') {
@@ -353,6 +350,7 @@ var create_list = function (x) {
 }
 var create_dot_list = function (x, y) { 
     
+    
     var array = []; // this holds the "proper" array
     
     //
@@ -363,7 +361,13 @@ var create_dot_list = function (x, y) {
             array.push(x.val[i]);
         }
     }
+    else if(isArray(x)) {
+       for ( var i = 0; i < x.length; i++ ) {
+            array.push(x[i]);
+        } 
+    }
     else { array.push(x); }
+    
     
     //
     // After the dot
