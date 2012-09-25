@@ -1,10 +1,9 @@
-Scheme REPL:
+Scheme REPL by Travis Hoover:
 ===
 
 To enter the REPL simply type:
 
-<code>node scheme.js --debug</code>
-
+<code>node scheme.js</code>
 
 
 To make any changes edit scheme.par and then compile the changes with:
