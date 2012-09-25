@@ -7,6 +7,25 @@ Requirements:
 --------
 * NodeJS ( tested on v0.8+ )
 
+Sample expressions:
+--------
+Current built-in standard functions: def, +, -, ., and lambda.
+
+<pre><code>> (def helloWorld (+ "Hello" " " "World"))
+> helloWorld
+Hello World
+</code></pre>
+
+<pre><code>> (def double (lambda (x) (+ x x))
+> (double 2)
+4
+</code></pre>
+
+<pre><code>> (+ 1 2 3 4 . (2 3 4 5))
+24
+</code></pre>
+
+
 How to run:
 --------
 
