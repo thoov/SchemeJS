@@ -1,5 +1,14 @@
 [* // Author: Travis Hoover, thoov7@gmail.com
 
+Array.prototype.contains = function(obj) {
+    var i = this.length;
+    while (i--) {
+        if (this[i] === obj) {
+            return true;
+        }
+    }
+    return false;
+}
 
 //
 // Alist is the symbol table.
@@ -36,21 +45,22 @@ var makePrimFunction = function ( number ) {
     return { type:'PRIM', val:number };
 }
 
-var makeElement = function (type, value) {
-    return { type:type, val:value};
-}
-var appendAlist = function (type, value) {
+var makeLambdaFunction = function () {
     
-    alist = makeCons( makeCons(makeSymbol('PI'), makeNumber(3.14)),  alist);
+    return {};
 }
 
+
 //
-// load the primative functions into the alist.
+// load the primative functions and constants into the alist.
 //
 alist = makeCons( makeCons(makeSymbol('def'), makePrimFunction(1)),  alist);
 alist = makeCons( makeCons(makeSymbol('+'), makePrimFunction(2)),  alist);
 alist = makeCons( makeCons(makeSymbol('-'), makePrimFunction(3)),  alist);
 alist = makeCons( makeCons(makeSymbol('PI'), makeNumber(3.14)),  alist);
+alist = makeCons( makeCons(makeSymbol('lambda'), makePrimFunction(4)),  alist);
+//alist = makeCons( makeCons(makeSymbol('exp'), makeLambdaFunction(4)),  alist);
+//console.log(alist);
 
 
 //
@@ -60,10 +70,22 @@ alist = makeCons( makeCons(makeSymbol('PI'), makeNumber(3.14)),  alist);
 //
 primfns[1] = function (sexpr) {
     
+    
+    if (sexpr.length !== 3) {
+        
+        console.log('Invalid call of definition. Must have 3 elements, ' + sexpr.length + ' elements present.');
+        process.exit(1);
+    }
+    
     var def = sexpr[0]; // The def keyword is the first token on the stack.
 
-    var variable  = sexpr[1]; // The second token is the variable being defined.
-
+    var variable = sexpr[1]; // The second token is the variable being defined.
+    
+    if (variable.type !== 'SYMBOL') {
+        
+        console.log('Invalid definition type. Must be a symbol, a ' + variable.type + ' given.');
+        process.exit(1);
+    }
 
     //
     // The third param is the value for the variable
@@ -83,9 +105,43 @@ primfns[1] = function (sexpr) {
     
         alist = makeCons( makeCons(variable, makeString(value)),  alist);
     }
+    else if (typeof value === 'object') {
+        
+        //
+        // This is a lambda function. We need to go and rename variables.
+        // Here we need to pre process functions to protect local variables.
+        //
+        
+        
+        var prefixFunctionName = variable;
+        var prefixedParameterNames = [];
+
+        //
+        // Convert the old parameters into the new ones.
+        //
+        for (var i = 0; i < value.parameters.length; i++) {
+            prefixedParameterNames.push( value.parameters[i].val );
+            
+            value.parameters[i].val = prefixFunctionName.val + '_' + value.parameters[i].val;
+        }        
+        
+        //
+        // Replace local variables with new names.
+        //
+        for (var i = 0; i < value.expression.length; i++) {
+            
+            if (prefixedParameterNames.contains(value.expression[i].val)) {
+                
+                value.expression[i].val = prefixFunctionName.val + '_' + value.expression[i].val;
+            }
+        }  
+                
+        alist = makeCons( makeCons(variable, value),  alist);
+    }
     else {
         
         console.log("Feature not added yet.");
+        process.exit(1);
     }
     
     return true;
@@ -112,7 +168,44 @@ primfns[2] = function (sexpr) {
     return value;
 }
 
+//
+// Prim function for -
+//
+primfns[3] = function (sexpr) {
 
+    var minus = sexpr[0]; // The minus sign
+
+    var value = eval(sexpr[1]); // The first element after the - sign goes on the left hand side of the minus sign.
+
+
+    //
+    // Loop through the rest of the elments and subtract them up.
+    //
+    for (var i = 2; i < sexpr.length; i++) {
+
+        value -= eval(sexpr[i]);
+    }
+
+    return value;
+}
+
+//
+// Prim function for lambda
+//
+// (def exp (lambda (x) (* x x)))
+//
+// TODO: make sure correct types.
+//
+primfns[4] = function (sexpr) {
+
+    var lambda = sexpr[0]; // The lambda keyword is the first token on the stack.
+    var parameters = sexpr[1]; // The second token is the variable being defined.
+    var body = sexpr[2]; // The third element is the expression of the function.
+    
+    console.log({ type:'LAMBDA', parameters:parameters.val, expression:body.val });
+
+    return { type:'LAMBDA', parameters:parameters.val, expression:body.val };
+}
 
 
 //
@@ -144,6 +237,9 @@ var lookup = function (symbol) {
     return false;
 }
 
+//
+// Print the symbols in the alist. Used only for debugging.
+//
 var listSymbols = function () {
     
     var alistPtr = alist;
@@ -155,13 +251,35 @@ var listSymbols = function () {
         alistPtr = alistPtr.cdr; // "advance the pointer"
 
         // If null then we are at the end of the alist.
-        if (alistPtr.type === 'NULL') { alistPtr = { type:'NULL' }; } 
-        
+        if (alistPtr.type === 'NULL') { alistPtr = { type:'NULL' }; }     
     }
-
 }
 
+var evalLambda = function ( parentExpression, lambdaFunction ) {
 
+    var lambdaParameters = lambdaFunction.parameters;
+    var lambdaExpression = lambdaFunction.expression;
+    
+    if (lambdaParameters.length !== parentExpression.length - 1) {
+        
+        console.log("Lambda function " + parentExpression[0].val + " invoked with invalid parameters.");
+        process.exit(1);
+    }
+    
+    
+    //
+    // Add the temp variables into the alist.
+    //
+    for (var i = 1, j = 0; i < parentExpression.length; i++, j++) {
+        
+        alist = makeCons( makeCons(lambdaParameters[j], makeNumber(parentExpression[i].val)),  alist);
+    }
+    
+    //
+    // Evaluate the function expression.
+    //
+    return eval({ type:'LIST', val:lambdaExpression });
+}
 
 
 //
@@ -191,6 +309,11 @@ var eval = function( SEXPR ) {
         if (lookupValue.type === 'PRIM') {
              
             return primfns[lookupValue.val]( parentExpression );
+        }
+        else if (lookupValue.type === 'LAMBDA') {
+
+            console.log(parentExpression);
+            return evalLambda( parentExpression, lookupValue );
         }
         else if (lookupValue.type !== 'NULL') {
             
@@ -337,6 +460,11 @@ process.stdin.on('data', function (text) {
             
             listSymbols();
         }
+        else if (text.toLowerCase() == 'print tokens') {
+            
+            console.log('> Tokenized: ');
+            console.log(JSON.stringify(tokenized)); 
+        }
         else {
         
             // send text to scheme tokenizer ( E )
@@ -347,14 +475,6 @@ process.stdin.on('data', function (text) {
             }
             else {
           
-                if (DEBUG) { 
-                    
-                    console.log('> Tokenized: ');
-                    console.log(JSON.stringify(tokenized)); 
-                    console.log('> Eval: ');
-                    
-                
-                }
                 console.log(eval(tokenized)); // Print the evaluated expression ( P )
             }
         }
