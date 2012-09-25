@@ -3,6 +3,10 @@ Scheme Interpreter by Travis Hoover:
 
 Basic Scheme interpreter written in javascript with help from jscc. Only a small subset of scheme has been implemented and some parts have been renamed or changed for convenience.
 
+Requirements:
+--------
+* NodeJS ( tested on v0.8+ )
+
 How to run:
 --------
 
