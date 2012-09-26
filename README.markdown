@@ -16,7 +16,7 @@ Current built-in standard functions: def, +, -, ., and lambda.
 Hello World
 </code></pre>
 
-<pre><code>> (def double (lambda (x) (+ x x))
+<pre><code>> (def double (lambda (x) (+ x x)))
 > (double 2)
 4
 </code></pre>
