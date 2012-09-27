@@ -4,38 +4,42 @@
 // Holds all of the symbols and their values along with primative functions.
 //
 var alist = { type:'NULL' };
-var primfns = [];
+
+//
+// Constants
+//
+var NUMBER = 'NUMBER';
+var SYMBOL = 'SYMBOL';
+var STRING = 'STRING';
+var CONS   = 'CONS';
+var PRIM   = 'PRIM';
+
+//
+// Load the primitive functions.
+//
+require('./primitiveFunctions');
+
 
 //
 // Make functions for the alist
 //
-var makeNumber = function ( number ) {
-
-	return { type:'NUMBER', val:number };
-}
-var makeNull = function () {
-
-	return { type:'NULL' };
-}
-var makeSymbol = function( symbol ) {
-
-	return { type:'SYMBOL', val:symbol };    
-}
-var makeString = function( string ) {
-
-	return { type:'STRING', val:string };
-}
-
 var makeItem = function (identifier, value) {
-
+	
+	if( value == null ) { // If value is null then we are creating a null token
+		
+		return { type:identifier.toUpperCase() };
+	}
+	
+	return { type:identifier.toUpperCase(), val:value };
 }
 
 var makeCons = function ( car, cdr ) {
 
-	return { type:'CONS', car:car, cdr:cdr };
+	return { type:CONS, car:car, cdr:cdr };
 }
 var makePrimFunction = function ( number ) {
-	return { type:'PRIM', val:number };
+	
+	return { type:PRIM, val:number };
 }
 
 
@@ -43,156 +47,16 @@ var makePrimFunction = function ( number ) {
 //
 // load the primative functions and constants into the alist.
 //
-alist = makeCons( makeCons(makeSymbol('def'), makePrimFunction(1)),  alist);
-alist = makeCons( makeCons(makeSymbol('+'), makePrimFunction(2)),  alist);
-alist = makeCons( makeCons(makeSymbol('-'), makePrimFunction(3)),  alist);
-alist = makeCons( makeCons(makeSymbol('PI'), makeNumber(3.14)),  alist);
-alist = makeCons( makeCons(makeSymbol('lambda'), makePrimFunction(4)),  alist);
-//alist = makeCons( makeCons(makeSymbol('exp'), makeLambdaFunction(4)),  alist);
-//console.log(alist);
+alist = makeCons( makeCons(makeItem( SYMBOL, 'def'), makePrimFunction(1)),  alist);
+alist = makeCons( makeCons(makeItem( SYMBOL, '+'), makePrimFunction(2)),  alist);
+alist = makeCons( makeCons(makeItem( SYMBOL, '-'), makePrimFunction(3)),  alist);
+alist = makeCons( makeCons(makeItem( SYMBOL, 'PI'), makeItem( NUMBER, 3.14)),  alist);
+alist = makeCons( makeCons(makeItem( SYMBOL, 'lambda'), makePrimFunction(4)),  alist);
+alist = makeCons( makeCons(makeItem( SYMBOL, '*'), makePrimFunction(5)),  alist);
+alist = makeCons( makeCons(makeItem( SYMBOL, '/'), makePrimFunction(6)),  alist);
 
 
-//
-// Prim function for def
-//
-// TODO: make sure correct types.
-//
-primfns[1] = function (sexpr) {
 
-
-	if (sexpr.length !== 3) {
-
-		console.log('Invalid call of definition. Must have 3 elements, ' + sexpr.length + ' elements present.');
-		process.exit(1);
-	}
-
-	var def = sexpr[0]; // The def keyword is the first token on the stack.
-
-	var variable = sexpr[1]; // The second token is the variable being defined.
-
-	if (variable.type !== 'SYMBOL') {
-
-		console.log('Invalid definition type. Must be a symbol, a ' + variable.type + ' given.');
-		process.exit(1);
-	}
-
-	//
-	// The third param is the value for the variable
-	// It can either be an atom or a sub list. We eval it to get a value.
-	//
-	var value = eval(sexpr[2]);
-
-
-	//
-	// Insert into alist the new variable that was defined.
-	//
-	if (typeof value === 'number') {
-
-		alist = makeCons( makeCons(variable, makeNumber(value)),  alist);   
-	}
-	else if (typeof value === 'string') {
-
-		alist = makeCons( makeCons(variable, makeString(value)),  alist);
-	}
-	else if (typeof value === 'object') {
-
-		//
-		// This is a lambda function. We need to go and rename variables.
-		// Here we need to pre process functions to protect local variables.
-		//
-
-
-		var prefixFunctionName = variable;
-		var prefixedParameterNames = [];
-
-		//
-		// Convert the old parameters into the new ones.
-		//
-		for (var i = 0; i < value.parameters.length; i++) {
-			prefixedParameterNames.push( value.parameters[i].val );
-
-			value.parameters[i].val = prefixFunctionName.val + '_' + value.parameters[i].val;
-		}        
-
-		//
-		// Replace local variables with new names.
-		//
-		for (var i = 0; i < value.expression.length; i++) {
-
-			if (prefixedParameterNames.contains(value.expression[i].val)) {
-
-				value.expression[i].val = prefixFunctionName.val + '_' + value.expression[i].val;
-			}
-		}  
-
-		alist = makeCons( makeCons(variable, value),  alist);
-	}
-	else {
-
-		console.log("Feature not added yet.");
-		process.exit(1);
-	}
-
-	return true;
-}
-
-//
-// Prim function for +
-//
-primfns[2] = function (sexpr) {
-
-	var plus = sexpr[0]; // The plus sign
-
-	var value = eval(sexpr[1]); // The first element after the + sign goes on the left hand side of the plus sign.
-
-
-	//
-	// Loop through the rest of the elments and add them up.
-	//
-	for (var i = 2; i < sexpr.length; i++) {
-
-		value += eval(sexpr[i]);
-	}
-
-	return value;
-}
-
-//
-// Prim function for -
-//
-primfns[3] = function (sexpr) {
-
-	var minus = sexpr[0]; // The minus sign
-
-	var value = eval(sexpr[1]); // The first element after the - sign goes on the left hand side of the minus sign.
-
-
-	//
-	// Loop through the rest of the elments and subtract them up.
-	//
-	for (var i = 2; i < sexpr.length; i++) {
-
-		value -= eval(sexpr[i]);
-	}
-
-	return value;
-}
-
-//
-// Prim function for lambda
-//
-// (def exp (lambda (x) (* x x)))
-//
-// TODO: make sure correct types.
-//
-primfns[4] = function (sexpr) {
-
-	var lambda = sexpr[0]; // The lambda keyword is the first token on the stack.
-	var parameters = sexpr[1]; // The second token is the variable being defined.
-	var body = sexpr[2]; // The third element is the expression of the function.
-
-	return { type:'LAMBDA', parameters:parameters.val, expression:body.val };
-}
 
 
 //
@@ -227,7 +91,7 @@ var lookup = function (symbol) {
 //
 // Print the symbols in the alist. Used only for debugging.
 //
-var listSymbols = function () {
+GLOBAL.listSymbols = function () {
 
 	var alistPtr = alist;
 
