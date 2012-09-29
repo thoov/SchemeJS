@@ -9,7 +9,7 @@ Requirements:
 
 Sample expressions:
 --------
-Current built-in standard functions: def, +, -, ., and lambda.
+Current built-in standard functions: def, +, -, ., *, /,  and lambda.
 
 <pre><code>> (def helloWorld (+ "Hello" " " "World"))
 > helloWorld
@@ -38,3 +38,29 @@ First you must compile the jscc scheme.par file using node. This produces a sche
 Second we will have node run our newly compiled javascript file.
 
 <code>node scheme.js</code>
+
+
+Debugging
+--------
+
+To print the tokenized string, use print tokens
+<pre><code>> (* 3 5)
+15
+> print tokens 
+> Tokenized: 
+{"type":"LIST","val":[{"type":"SYMBOL","val":"*"},{"type":"NUMBER","val":3},{"type":"NUMBER","val":5}]}
+</code></pre>
+
+To print the alist also know as the symbol list, use print alist
+<pre><code>> (def testing 23)    
+true
+> print alist
+testing
+/
+*
+lambda
+PI
+-
++
+def
+</code></pre>
