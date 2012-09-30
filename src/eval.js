@@ -276,7 +276,7 @@ var evaluation = {
 			//
 			for (var i = 1, j = 0; i < parentExpression.length; i++, j++) {
 		
-				alist = makeCons( makeCons(lambdaParameters[j], makeNumber(parentExpression[i].val)),  alist);
+				alist.alist = alist.makeCons( alist.makeCons(lambdaParameters[j], alist.makeItem( "NUMBER", parentExpression[i].val)),  alist.alist);
 			}
 		
 			//
