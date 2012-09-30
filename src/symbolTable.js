@@ -60,6 +60,10 @@ module.exports = {
 		return false;
 	},
 	
+	remove : function (symbol) {
+		
+	},
+	
 	print : function () {
 
 		var alistPtr = this.alist;

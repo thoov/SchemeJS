@@ -1,6 +1,8 @@
 var alist = require('./symbolTable.js');
 alist.initialize();
 
+var helpers = require('./helpers.js');
+
 //
 // The evaluation and lambda evaluation methods.
 // Also contains the primitive functions.
@@ -147,7 +149,7 @@ var evaluation = {
 		// TODO: make sure correct types.
 		//
 		this.primfns[4] = function (sexpr) {
-		
+				
 			var lambda = sexpr[0]; // The lambda keyword is the first token on the stack.
 			var parameters = sexpr[1]; // The second token is the variable being defined.
 			var body = sexpr[2]; // The third element is the expression of the function.
@@ -225,8 +227,19 @@ var evaluation = {
 			currentSexpr = SEXPR.val[0];
 			parentExpression = SEXPR.val;
 		}
-	
-	
+		
+		//
+		// Look for anonymous lambda functions.
+		//
+		if( helpers.isArray(SEXPR.val) && SEXPR.val.length >= 2  ) {
+			
+			if(SEXPR.val[0].val[0].val == 'lambda') {
+
+				return this.anonymous(SEXPR.val);
+			}	
+		}
+
+		
 		if (currentSexpr.type === 'SYMBOL') {
 	
 			var lookupValue = alist.lookup( currentSexpr );
@@ -236,7 +249,7 @@ var evaluation = {
 				return this.invoke(lookupValue.val, parentExpression );
 			}
 			else if (lookupValue.type === 'LAMBDA') {
-	
+				
 				return this.lambda( parentExpression, lookupValue );
 			}
 			else if (lookupValue.type !== 'NULL') {
@@ -261,30 +274,55 @@ var evaluation = {
 	
 	lambda : function ( parentExpression, lambdaFunction ) {
 		
-			var lambdaParameters = lambdaFunction.parameters;
-			var lambdaExpression = lambdaFunction.expression;
-		
-			if (lambdaParameters.length !== parentExpression.length - 1) {
-		
-				console.log("Lambda function " + parentExpression[0].val + " invoked with invalid parameters.");
-				process.exit(1);
-			}
-		
-		
-			//
-			// Add the temp variables into the alist.
-			//
-			for (var i = 1, j = 0; i < parentExpression.length; i++, j++) {
-		
-				alist.alist = alist.makeCons( alist.makeCons(lambdaParameters[j], alist.makeItem( "NUMBER", parentExpression[i].val)),  alist.alist);
-			}
-		
-			//
-			// Evaluate the function expression.
-			//
-			return this.eval({ type:'LIST', val:lambdaExpression });
+		var lambdaParameters = lambdaFunction.parameters;
+		var lambdaExpression = lambdaFunction.expression;
+	
+		if (lambdaParameters.length !== parentExpression.length - 1) {
+	
+			console.log("Lambda function " + parentExpression[0].val + " invoked with invalid parameters.");
+			process.exit(1);
 		}
 	
+	
+		//
+		// Add the temp variables into the alist.
+		//
+		for (var i = 1, j = 0; i < parentExpression.length; i++, j++) {
+	
+			alist.alist = alist.makeCons( alist.makeCons(lambdaParameters[j], alist.makeItem( "NUMBER", parentExpression[i].val)),  alist.alist);
+		}
+	
+		//
+		// Evaluate the function expression.
+		//
+		return this.eval({ type:'LIST', val:lambdaExpression });
+	},
+	
+	anonymous : function ( sexpr ) {
+		
+		var lambda = this.invoke(4, sexpr[0].val); // the lambda function.		
+		
+		var parameters = [];
+		
+		for (var i = 1; i < sexpr.length; i++) {
+			
+			parameters[lambda.parameters[i-1].val] = sexpr[i];
+		}
+		
+		
+		for (var i = 0; i < lambda.expression.length; i++) {
+						
+			if( typeof parameters[lambda.expression[i].val] !== "undefined" ) {
+				
+				lambda.expression[i] = parameters[lambda.expression[i].val];
+			}
+		}
+		
+		//
+		// Evaluate the function expression.
+		//
+		return this.eval({ type:'LIST', val:lambda.expression});
+	}	
 };
 
 module.exports = evaluation;
