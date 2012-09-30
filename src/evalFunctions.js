@@ -106,6 +106,8 @@ primfns[1] = function (sexpr) {
 //
 primfns[2] = function (sexpr) {
 
+	console.log(sexpr);
+
 	var plus = sexpr[0]; // The plus sign
 
 	var value = eval(sexpr[1]); // The first element after the + sign goes on the left hand side of the plus sign.

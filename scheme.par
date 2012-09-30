@@ -1,24 +1,8 @@
 [* 
-//
-// Author: Travis Hoover
-//
 
-//
-// Include helper functions.
-//
-require('./src/helperFunctions.js');
-
-
-//
-// The evaluation functions.
-//
-require('./src/evalFunctions.js');
-
-
-//
-// The parsing functions.
-//
-require('./src/parseFunctions.js');
+var parse = require('./src/parse.js');
+var evaluation = require('./src/eval.js');
+evaluation.initialize();
 
 *]
 
@@ -40,25 +24,25 @@ require('./src/parseFunctions.js');
 ##
 
 
-readonce:   sexpr                                    [* tokenized = %1; *]
+readonce:   sexpr                                    [* parse.tokenized = %1; *]
             ;
 
 sexpr:      atom                                      
             | list                                   [* %% = %1; *]
             ;
 
-list:       LPAREN RPAREN	                         [* %% = createNull(); *]
-	        | LPAREN members RPAREN                  [* %% = createList(%2) *]
-	        | LPAREN members DOT sexpr RPAREN        [* %% = createDotList(%2, %4); *]
+list:       LPAREN RPAREN	                         [* %% = parse.createNull(); *]
+	        | LPAREN members RPAREN                  [* %% = parse.createList(%2) *]
+	        | LPAREN members DOT sexpr RPAREN        [* %% = parse.createDotList(%2, %4); *]
             ;
 
-members:    members sexpr                            [* %% = arrayAppend(%1, %2); *]
+members:    members sexpr                            [* %% = parse.arrayAppend(%1, %2); *]
             | sexpr                                  [* %% = %1; *]
             ;
 
-atom:       NUMBER                                   [* %% = createItem( 'NUMBER', %1); *]
-            | SYMBOL                                 [* %% = createItem( 'SYMBOL', %1); *]
-            | STRING                                 [* %% = createItem( 'STRING', %1); *]
+atom:       NUMBER                                   [* %% = parse.createItem( 'NUMBER', %1); *]
+            | SYMBOL                                 [* %% = parse.createItem( 'SYMBOL', %1); *]
+            | STRING                                 [* %% = parse.createItem( 'STRING', %1); *]
             ;
             
 
@@ -92,12 +76,11 @@ process.stdin.on('data', function (text) {
                     
         if (text.toLowerCase() == 'print alist') {
             
-            listSymbols();
+            evaluation.printSymbols();
         }
         else if (text.toLowerCase() == 'print tokens') {
             
-            console.log('> Tokenized: ');
-            console.log(JSON.stringify(tokenized)); 
+            parse.print(); 
         }
         else {
         
@@ -109,7 +92,8 @@ process.stdin.on('data', function (text) {
             }
             else {
           
-                console.log(eval(tokenized)); // Print the evaluated expression ( P )
+                  
+                console.log(evaluation.eval(parse.tokenized)); // Print the evaluated expression ( P )
             }
         }
     }
