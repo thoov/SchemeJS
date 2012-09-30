@@ -21,6 +21,12 @@ Hello World
 4
 </code></pre>
 
+<pre><code>> (def double5 (lambda (x) ( * x x ((lambda (y) (+ y 5)) 6))))
+true
+> (double5 3)
+99
+</code></pre>
+
 <pre><code>> (+ 1 2 3 4 . (2 3 4 5))
 24
 </code></pre>
