@@ -12,6 +12,7 @@ Sample expressions:
 Current built-in standard functions: def, +, -, ., *, /,  and lambda.
 
 <pre><code>> (def helloWorld (+ "Hello" " " "World"))
+true
 > helloWorld
 Hello World
 </code></pre>
@@ -31,6 +32,13 @@ true
 24
 </code></pre>
 
+<pre><code>> (= 0 0 0 0 (- 1 1))
+#t
+</code></pre>
+
+<pre><code>> (if (= 0 1) "foo" "bar")
+bar
+</code></pre>
 
 How to run:
 --------
