@@ -23,7 +23,9 @@ module.exports = {
 	
 		return { type:'PRIM', val:number };
 	},
-	
+	makeConstant : function ( value ) {
+		
+	},
 	initialize : function () {
 		//
 		// load the primative functions and constants into the alist.
@@ -39,6 +41,7 @@ module.exports = {
 		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', 'if'), this.makePrimFunction(8)),  this.alist);
 		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', 'quote'), this.makePrimFunction(9)),  this.alist);
 		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', 'cons'), this.makePrimFunction(10)),  this.alist);
+		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', 'length'), this.makePrimFunction(11)),  this.alist);
 	},
 	
 	lookup : function (symbol) {

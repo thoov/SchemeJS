@@ -35,12 +35,12 @@ module.exports = {
 		//
 		// Before the dot
 		//
-		if ( isArray(x.val) ) {
+		if ( helpers.isArray(x.val) ) {
 	
 			for ( var i = 0; i < x.val.length; i++ )
 				array.push(x.val[i]);
 		}
-		else if(isArray(x)) {
+		else if(helpers.isArray(x)) {
 	
 		   for ( var i = 0; i < x.length; i++ )
 				array.push(x[i]);
@@ -51,7 +51,7 @@ module.exports = {
 		//
 		// After the dot
 		//
-		if ( isArray(y.val) ) {
+		if ( helpers.isArray(y.val) ) {
 	
 			for ( var i = 0; i < y.val.length; i++ )
 				array.push(y.val[i]);

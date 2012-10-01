@@ -292,6 +292,16 @@ var evaluation = {
 			return 0;
 		}
 		
+		
+		
+		//
+		// Prim function for length
+		//
+		// (length (23 23 23))
+		// 		=> 3
+		//
+		this.primfns[11] = require('./lib/length.js').len;
+		
 	},
 	
 	invoke : function (number, sexpr) {
