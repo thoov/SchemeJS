@@ -16,6 +16,7 @@ evaluation.initialize();
     '[ ]?\)'                                      RPAREN
     '\([ ]?'                                      LPAREN
     '\.'                                          DOT
+    '\''
     '[0-9]+[ ]?|[0-9]+\.[0-9]*|[0-9]*\.[0-9]+'    NUMBER   [* %match = parseFloat( %match ); *]
     '[^\(\)0-9\.\'\`\,\@" ][^\) ]*'               SYMBOL   [* /*symbols cannot begin with digits, parens, quotes, dots, etc.*/ *]
     '\"[^"]*\"'                                   STRING   [* %match = %match.substr( 1, %match.length - 2 ); *]
@@ -40,9 +41,9 @@ members:    members sexpr                            [* %% = parse.arrayAppend(%
             | sexpr                                  [* %% = %1; *]
             ;
 
-atom:       NUMBER                                   [* %% = parse.createItem( 'NUMBER', %1); *]
-            | SYMBOL                                 [* %% = parse.createItem( 'SYMBOL', %1); *]
-            | STRING                                 [* %% = parse.createItem( 'STRING', %1); *]
+atom:       NUMBER                                   [* %% = parse.createItem('NUMBER', %1); *]
+            | SYMBOL                                 [* %% = parse.createItem('SYMBOL', %1); *]
+            | STRING                                 [* %% = parse.createItem('STRING', %1); *]
             ;
             
 

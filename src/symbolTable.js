@@ -36,6 +36,9 @@ module.exports = {
 		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', '*'), this.makePrimFunction(5)),  this.alist);
 		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', '/'), this.makePrimFunction(6)),  this.alist);
 		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', '='), this.makePrimFunction(7)),  this.alist);
+		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', 'if'), this.makePrimFunction(8)),  this.alist);
+		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', 'quote'), this.makePrimFunction(9)),  this.alist);
+		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', 'cons'), this.makePrimFunction(10)),  this.alist);
 	},
 	
 	lookup : function (symbol) {
