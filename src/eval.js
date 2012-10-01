@@ -207,6 +207,44 @@ var evaluation = {
 			return value;
 		}
 		
+		//
+		// Prim function for equals = 
+		//
+		// (= 0 1)	
+		//
+		//
+		this.primfns[7] = function (sexpr) {
+		
+			var equals = sexpr[0]; // The = sign
+			
+			var value = evaluation.eval(sexpr[1]); // The first element after the = sign goes on the left hand side of the equals sign.
+			
+			//
+			// Loop through the rest of the elments and add them up.
+			//
+			for (var i = 2; i < sexpr.length; i++) {
+				
+				if( value != evaluation.eval(sexpr[i]) ) {
+					return '#f';
+				}
+			}
+			
+			return '#t';
+		}
+		
+		//
+		// Prim function for if
+		//
+		// (if TEST THEN
+		//				ELSE)	
+		//
+		//
+		this.primfns[8] = function (sexpr) {
+		
+			
+			return 0;
+		}
+		
 	},
 	
 	invoke : function (number, sexpr) {
@@ -304,12 +342,18 @@ var evaluation = {
 		
 		var parameters = [];
 		
+		//
+		// Set a key value pair of parameter name to sexpr
+		//
 		for (var i = 1; i < sexpr.length; i++) {
 			
 			parameters[lambda.parameters[i-1].val] = sexpr[i];
 		}
 		
 		
+		//
+		// Replace all occurances of parameters with their sexpr
+		//
 		for (var i = 0; i < lambda.expression.length; i++) {
 						
 			if( typeof parameters[lambda.expression[i].val] !== "undefined" ) {
@@ -321,7 +365,7 @@ var evaluation = {
 		//
 		// Evaluate the function expression.
 		//
-		return this.eval({ type:'LIST', val:lambda.expression});
+		return this.eval({ type:'LIST', val:lambda.expression });
 	}	
 };
 
