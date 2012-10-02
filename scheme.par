@@ -33,19 +33,19 @@ sexpr:      atom
             ;
 
 list:       LPAREN RPAREN	                         [* %% = parse.createNull(); *]
-	        | LPAREN members RPAREN                  [* %% = parse.createList(%2) *]
-	        | LPAREN members DOT sexpr RPAREN        [* %% = parse.createDotList(%2, %4); *]
+            | LPAREN atom members RPAREN             [* %% = parse.createCons(%2, %3); /* a list must first start with a symbol */ *]
+            | LPAREN members DOT sexpr RPAREN        [* %% = parse.createDotList(%2, %4); *]
             ;
 
-members:    members sexpr                            [* %% = parse.arrayAppend(%1, %2); *]
-            | sexpr                                  [* %% = %1; *]
+members:    members sexpr                            [* %% = parse.createCons(%2, %1); *]
+            | sexpr                                  [* %% = parse.createCons(%1); *]
             ;
 
 atom:       NUMBER                                   [* %% = parse.createItem('NUMBER', %1); *]
             | SYMBOL                                 [* %% = parse.createItem('SYMBOL', %1); *]
             | STRING                                 [* %% = parse.createItem('STRING', %1); *]
             ;
-            
+
 
 
 [*
@@ -69,32 +69,32 @@ process.argv.forEach(function (val, index, array) {
 process.stdin.on('data', function (text) {
 
     // ( R )
-    
+
     text = text.trim();
-    
+
     if( text != "" ) {
-        
-                    
+
+
         if (text.toLowerCase() == 'print alist') {
-            
+
             evaluation.printSymbols();
         }
         else if (text.toLowerCase() == 'print tokens') {
-            
+
             parse.print(); 
         }
         else {
-        
+
             // send text to scheme tokenizer ( E )
             if( ( error_count = __NODEJS_parse( text, error_offsets, error_lookaheads ) ) > 0 ) {
-           
+
                 for( var i = 0; i < error_count; i++ )
                     console.log( "Parse error near " + text.substr( error_offsets[i] ) + ", expecting \"" + error_lookaheads[i].join() + "\"" );
             }
             else {
-          
-                  
-                console.log(evaluation.eval(parse.tokenized)); // Print the evaluated expression ( P )
+
+                  parse.print(); 
+                //console.log(evaluation.eval(parse.tokenized)); // Print the evaluated expression ( P )
             }
         }
     }

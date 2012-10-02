@@ -21,6 +21,14 @@ module.exports = {
 	
 		return { type:'LIST', val:[x] }; 
 	},
+	createCons : function (car, cdr) {
+	
+		if(cdr == null) {
+			return { type:'CONS', car:car, cdr:this.createNull() };
+		}
+	
+		return { type:'CONS', car:car, cdr:cdr };	
+	},
 	
 	//
 	// Turn an improper list into a proper list.
