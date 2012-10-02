@@ -33,6 +33,9 @@ sexpr:      atom
 
 list:       LPAREN RPAREN	                         [* %% = parse.createNull(); *]
             | LPAREN atom members RPAREN             [* %% = parse.createCons(%2, %3); /* a list must first start with a symbol */ *]
+            | LPAREN atom RPAREN                     [* %% = parse.createCons(%2); *]
+            | LPAREN list RPAREN                     [* %% = parse.createCons(parse.createCons(%2)); *]
+            | LPAREN list members RPAREN             [* %% = parse.createCons(parse.createCons(%2), %3); *]
             ;
 
 members:    sexpr members                            [* %% = parse.createCons(%1, %2); *]

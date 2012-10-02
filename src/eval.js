@@ -19,249 +19,53 @@ var evaluation = {
 		//
 		// Prim function for def
 		//
-		// TODO: make sure correct types.
-		//
-		this.primfns[1] = function (sexpr) {
-		
-		
-			if (sexpr.length !== 3) {
-		
-				console.log('Invalid call of definition. Must have 3 elements, ' + sexpr.length + ' elements present.');
-				process.exit(1);
-			}
-		
-			var def = sexpr[0]; // The def keyword is the first token on the stack.
-		
-			var variable = sexpr[1]; // The second token is the variable being defined.
-		
-			if (variable.type !== 'SYMBOL') {
-		
-				console.log('Invalid definition type. Must be a symbol, a ' + variable.type + ' given.');
-				process.exit(1);
-			}
-		
-			//
-			// The third param is the value for the variable
-			// It can either be an atom or a sub list. We eval it to get a value.
-			//
-			var value = evaluation.eval(sexpr[2]);
-		
-		
-			//
-			// Insert into alist the new variable that was defined.
-			//
-			if (typeof value === 'number') {
-		
-				alist.alist = alist.makeCons( alist.makeCons(variable, alist.makeItem( 'NUMBER', value)), alist.alist);   
-			}
-			else if (typeof value === 'string') {
-		
-				alist.alist = alist.makeCons( alist.makeCons(variable, alist.makeItem( 'STRING', value)),  alist.alist);
-			}
-			else if (typeof value === 'object') {
-		
-				//
-				// This is a lambda function. We need to go and rename variables.
-				// Here we need to pre process functions to protect local variables.
-				//
-		
-		
-				var prefixFunctionName = variable;
-				var prefixedParameterNames = [];
-		
-				//
-				// Convert the old parameters into the new ones.
-				//
-				for (var i = 0; i < value.parameters.length; i++) {
-					prefixedParameterNames.push( value.parameters[i].val );
-		
-					value.parameters[i].val = prefixFunctionName.val + '_' + value.parameters[i].val;
-				}        
-		
-				//
-				// Replace local variables with new names.
-				//
-				for (var i = 0; i < value.expression.length; i++) {
-		
-					if (prefixedParameterNames.contains(value.expression[i].val)) {
-		
-						value.expression[i].val = prefixFunctionName.val + '_' + value.expression[i].val;
-					}
-				}  
-		
-				alist.alist = alist.makeCons( alist.makeCons(variable, value),  alist.alist);
-			}
-			else {
-		
-				console.log("Feature not added yet.");
-				process.exit(1);
-			}
-		
-			return true;
-		}
+		this.primfns[1] = require('./lib/def.js').def;
 		
 		//
 		// Prim function for +
 		//
-		this.primfns[2] = function (sexpr) {
-					
-			var plus = sexpr[0]; // The plus sign
-	
-			var value = evaluation.eval(sexpr[1]); // The first element after the + sign goes on the left hand side of the plus sign.
-		
-			//
-			// Loop through the rest of the elments and add them up.
-			//
-			for (var i = 2; i < sexpr.length; i++) {
-		
-				value += evaluation.eval(sexpr[i]);
-			}
-		
-			return value;
-		}
+		this.primfns[2] = require('./lib/plus.js').plus;
 		
 		//
 		// Prim function for -
 		//
-		this.primfns[3] = function (sexpr) {
-		
-			var minus = sexpr[0]; // The minus sign
-		
-			var value = evaluation.eval(sexpr[1]); // The first element after the - sign goes on the left hand side of the minus sign.
-		
-		
-			//
-			// Loop through the rest of the elments and subtract them up.
-			//
-			for (var i = 2; i < sexpr.length; i++) {
-		
-				value -= evaluation.eval(sexpr[i]);
-			}
-		
-			return value;
-		}
+		this.primfns[3] = require('./lib/minus.js').minus;
 		
 		//
 		// Prim function for lambda
 		//
 		// (def exp (lambda (x) (* x x)))
 		//
-		// TODO: make sure correct types.
-		//
-		this.primfns[4] = function (sexpr) {
-				
-			var lambda = sexpr[0]; // The lambda keyword is the first token on the stack.
-			var parameters = sexpr[1]; // The second token is the variable being defined.
-			var body = sexpr[2]; // The third element is the expression of the function.
-		
-			return { type:'LAMBDA', parameters:parameters.val, expression:body.val };
-		}
+		this.primfns[4] = require('./lib/lambda.js').lambda;
 		
 		//
 		// Prim function for *
 		//
 		// (* 2 3 4)
 		//
-		// TODO: make sure correct types.
-		//
-		this.primfns[5] = function (sexpr) {
-		
-			var multiplcation = sexpr[0]; // The * sign
-		
-			var value = evaluation.eval(sexpr[1]); // The first element after the * sign goes on the left hand side of the plus sign.
-		
-		
-			//
-			// Loop through the rest of the elments and add them up.
-			//
-			for (var i = 2; i < sexpr.length; i++) {
-		
-				value *= evaluation.eval(sexpr[i]);
-			}
-		
-			return value;
-		}
+		this.primfns[5] = require('./lib/multiply.js').multiply;
 		
 		//
 		// Prim function for /
 		//
 		// (/ 4 2)
 		//
-		// TODO: make sure correct types.
-		//
-		this.primfns[6] = function (sexpr) {
-		
-			var division = sexpr[0]; // The / sign
-		
-			var value = evaluation.eval(sexpr[1]); // The first element after the / sign goes on the left hand side of the plus sign.
-		
-		
-			//
-			// Loop through the rest of the elments and add them up.
-			//
-			for (var i = 2; i < sexpr.length; i++) {
-		
-				value /= evaluation.eval(sexpr[i]);
-			}
-		
-			return value;
-		}
+		this.primfns[6] = require('./lib/divide.js').divide;
 		
 		//
 		// Prim function for equals = 
 		//
-		// (= 0 1)	
+		// (= 0 1)
 		//
-		//
-		this.primfns[7] = function (sexpr) {
-		
-			var equals = sexpr[0]; // The = sign
-			
-			var value = evaluation.eval(sexpr[1]); // The first element after the = sign goes on the left hand side of the equals sign.
-			
-			//
-			// Loop through the rest of the elments and add them up.
-			//
-			for (var i = 2; i < sexpr.length; i++) {
-				
-				if( value != evaluation.eval(sexpr[i]) ) {
-					return '#f';
-				}
-			}
-			
-			return '#t';
-		}
+		this.primfns[7] = require('./lib/equals.js').equals;
 		
 		//
 		// Prim function for if
 		//
 		// (if TEST THEN
-		//				ELSE)	
+		//				ELSE)
 		//
-		//
-		this.primfns[8] = function (sexpr) {
-			
-			var ifSymbol = sexpr[0]; // The if keyword
-			
-			
-			if( sexpr.length !== 4 ) {
-				console.log('Invaid arguments passed to if.');
-				process.exit(1);
-			}
-			
-			var test = evaluation.eval(sexpr[1]); // The first element after the = sign goes on the left hand side of the equals sign.
-			
-			
-			if( test == '#t' ) {
-				
-				return evaluation.eval(sexpr[2]); // The then part 
-			}
-			else {
-				
-				return evaluation.eval(sexpr[3]); // The else part 
-			}
-			
-		}
+		this.primfns[8] = require('./lib/if.js').if;
 		
 		//
 		// Prim function for quote
@@ -273,24 +77,14 @@ var evaluation = {
 		// (quote ()) => ()
 		//
 		//
-		this.primfns[9] = function (sexpr) {
-		
-			
-			return 0;
-		}
-		
-		
+		this.primfns[9] = require('./lib/quote.js').quote;
 		
 		//
 		// Prim function for cons
 		//
 		// (cons 1 2) => (1 . 2)
 		//
-		this.primfns[10] = function (sexpr) {
-		
-			
-			return 0;
-		}
+		this.primfns[10] = require('./lib/cons.js');
 		
 		
 		

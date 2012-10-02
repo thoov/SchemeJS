@@ -21,7 +21,7 @@ module.exports = {
 	//
 	createAtom : function (identifier, value) { 
 		
-		return { type:identifier.toUpperCase(), val:value}; 	
+		return { type:identifier.toUpperCase(), val:value }; 	
 	},
 	
 	//
@@ -45,22 +45,9 @@ module.exports = {
 		}
 	
 		return { type:constants.CONS, car:car, cdr:cdr };	
-	},
-	
-	//
-	// Creates an cons list that the final cdr is not null.
-	//
-	// More info on internal structure can be found here:
-	//		http://icem-www.folkwang-hochschule.de/~finnendahl/cm_kurse/doc/schintro/schintro_93.html
-	//
-	createImproperCons : function ( car, cdr ) {
-		
-		console.log(car);
-		console.log(cdr);
-		
-		return { type:constants.CONS, car:car, cdr:cdr };	
 	}
 }
 
 
 
+ch

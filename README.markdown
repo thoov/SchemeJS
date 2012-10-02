@@ -1,4 +1,4 @@
-Scheme Interpreter by Travis Hoover:
+Scheme Interpreter:
 ======
 
 Basic Scheme interpreter written in javascript with help from jscc. Only a small subset of scheme has been implemented and some parts have been renamed or changed for convenience.
@@ -78,3 +78,11 @@ PI
 +
 def
 </code></pre>
+
+http://icem-www.folkwang-hochschule.de/~finnendahl/cm_kurse/doc/schintro/schintro_93.html
+
+http://download.plt-scheme.org/doc/html/guide/Pairs__Lists__and_Scheme_Syntax.html
+
+http://www.cs.indiana.edu/scheme-repository/R4RS/r4rs_8.html
+
+http://classes.soe.ucsc.edu/cmps112/Spring03/languages/scheme/SchemeTutorialB.html
