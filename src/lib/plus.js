@@ -1,26 +1,27 @@
-//
-// + Function
-//
-// Prim function id: 2
-//
-//
+var constants = require('../constants.js');
+var evaluation = require('../eval.js');
 
+//
+// + function
+//
+// Returns the sum of atoms in a list.
+//
+// TODO: add some type checking.
+//
 module.exports = {
 
-	plus : function (sexpr) {
+	plus : function ( SEXPR ) {
+						
+		var leftOperand = evaluation.eval(SEXPR.car);
+		
+		var currentExpression = SEXPR.cdr;
+		while ( currentExpression.type != constants.NULL ) {
 			
-		var plus = sexpr[0]; // The plus sign
-	
-		var value = evaluation.eval(sexpr[1]); // The first element after the + sign goes on the left hand side of the plus sign.
-	
-		//
-		// Loop through the rest of the elments and add them up.
-		//
-		for (var i = 2; i < sexpr.length; i++) {
-	
-			value += evaluation.eval(sexpr[i]);
+			leftOperand += evaluation.eval(currentExpression.car);
+			
+			currentExpression = currentExpression.cdr; // Advance the "pointer" to the next token
 		}
-	
-		return value;
+		
+		return leftOperand;
 	}
 }

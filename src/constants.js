@@ -1,10 +1,11 @@
 //
+//
 // Constants
 //
-
+//
 module.exports = {
 
-	NULL : 'NULL',
+	NULL   : 'NULL',
  	NUMBER : 'NUMBER',
 	SYMBOL : 'SYMBOL',
 	STRING : 'STRING',

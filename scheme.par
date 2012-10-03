@@ -122,12 +122,10 @@ else
 
 process.stdin.on('data', function (text) {
 
-    // ( R )
 
     text = text.trim();
 
     if( text != "" ) {
-
 
         if (text.toLowerCase() == 'print alist') {
 
@@ -139,7 +137,6 @@ process.stdin.on('data', function (text) {
         }
         else {
 
-            // send text to scheme tokenizer ( E )
             if( ( error_count = __NODEJS_parse( text, error_offsets, error_lookaheads ) ) > 0 ) {
 
                 for( var i = 0; i < error_count; i++ )
@@ -147,11 +144,10 @@ process.stdin.on('data', function (text) {
             }
             else {
 
-                  parse.print(); 
-                //console.log(evaluation.eval(parse.tokenized)); // Print the evaluated expression ( P )
+                console.log(evaluation.eval(parse.tokenized));
             }
         }
     }
-    process.stdout.write("> "); // now loop or wait for user input again ( L )
+    process.stdout.write("> ");
 });
 *]

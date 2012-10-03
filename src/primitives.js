@@ -1,10 +1,13 @@
-
-
+//
+//
+// All of the primitive functions or built-in functions.
+//
+//
 module.exports = {
 	
 	primfns : [],
 	
-	initialize = function() {
+	initialize : function() {
 		
 		//
 		// Prim function for def
