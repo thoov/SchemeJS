@@ -6,6 +6,19 @@ Basic Scheme interpreter written in javascript with help from jscc. Only a small
 Requirements:
 --------
 * NodeJS ( tested on v0.8+ )
+* JS/CC ( v0.30 )
+
+How to run:
+--------
+
+For node, using JS/CC uses the following command line: 
+<pre><b>node jscc.js -v -o scheme.js -p node -t driver_node.js_ scheme.par</b></pre>
+</pre>
+
+Once the javascript file has been compiled, you can run the interpreter via: 
+<pre><b>node scheme.js -t</b></pre>
+</pre>
+
 
 Sample expressions:
 --------
@@ -39,19 +52,6 @@ true
 <pre><code>> (if (= 0 1) "foo" "bar")
 bar
 </code></pre>
-
-How to run:
---------
-
-First you must compile the jscc scheme.par file using node. This produces a scheme.js file which we will have node run.
-
-<code>node jscc.js -o scheme.js scheme.par</code>
-
---------
-
-Second we will have node run our newly compiled javascript file.
-
-<code>node scheme.js</code>
 
 
 Debugging
