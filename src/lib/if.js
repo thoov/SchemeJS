@@ -7,7 +7,7 @@
 
 module.exports = {
 
-	if : function (sexpr) {
+	iff : function (sexpr) {
 	
 		var ifSymbol = sexpr[0]; // The if keyword
 		
