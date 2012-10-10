@@ -13,7 +13,7 @@ module.exports = {
 	print : function () {
 		
 		console.log('> Tokenized: ');
-		console.log(JSON.stringify(this.tokenized));
+		console.log(JSON.stringify(this.tokenized, null, 4));
 	},
 	
 	//

@@ -1,46 +1,39 @@
+var constants = require('../constants.js');
+var evaluation = require('../eval.js');
+var symbolTable = require('../symbolTable.js');
+
 //
 // Def Function
 //
-// Prim function id: 1
-//
-
 module.exports = {
 
-	def : function (sexpr) {
+	def : function (SEXPR) {
 
-		if (sexpr.length !== 3) {
-	
-			console.log('Invalid call of definition. Must have 3 elements, ' + sexpr.length + ' elements present.');
-			process.exit(1);
-		}
-	
-		var def = sexpr[0]; // The def keyword is the first token on the stack.
-	
-		var variable = sexpr[1]; // The second token is the variable being defined.
-	
-		if (variable.type !== 'SYMBOL') {
-	
+		console.log(SEXPR);
+		
+		//
+		// This is the symbol that we are defining
+		//
+		var variable = SEXPR.car;
+		
+		if (variable.type !== constants.SYMBOL) {
+		
 			console.log('Invalid definition type. Must be a symbol, a ' + variable.type + ' given.');
 			process.exit(1);
 		}
-	
+		
+		var value = evaluation.eval(SEXPR.cdr);
+			
 		//
-		// The third param is the value for the variable
-		// It can either be an atom or a sub list. We eval it to get a value.
-		//
-		var value = evaluation.eval(sexpr[2]);
-	
-	
-		//
-		// Insert into alist the new variable that was defined.
+		// Insert into symbol table the new variable that was defined.
 		//
 		if (typeof value === 'number') {
 	
-			alist.alist = alist.makeCons( alist.makeCons(variable, alist.makeItem( 'NUMBER', value)), alist.alist);   
+			symbolTable.alist = symbolTable.makeCons( symbolTable.makeCons(variable, symbolTable.makeItem( constants.NUMBER, value)), symbolTable.alist);   
 		}
 		else if (typeof value === 'string') {
 	
-			alist.alist = alist.makeCons( alist.makeCons(variable, alist.makeItem( 'STRING', value)),  alist.alist);
+			symbolTable.alist = symbolTable.makeCons( symbolTable.makeCons(variable, symbolTable.makeItem( constants.STRING, value)),  symbolTable.alist);
 		}
 		else if (typeof value === 'object') {
 	

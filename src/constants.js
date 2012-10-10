@@ -9,6 +9,8 @@ module.exports = {
  	NUMBER : 'NUMBER',
 	SYMBOL : 'SYMBOL',
 	STRING : 'STRING',
+	LAMBDA : 'LAMBDA',
+	MACRO  : 'MACRO',
 	CONS   : 'CONS',
 	PRIM   : 'PRIM',
 	TRUE   : '#t',
