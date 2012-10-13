@@ -21,8 +21,9 @@ module.exports = {
 			console.log('Invalid definition type. Must be a symbol, a ' + variable.type + ' given.');
 			process.exit(1);
 		}
-		
+			
 		var value = evaluation.eval(SEXPR.cdr);
+		
 			
 		//
 		// Insert into symbol table the new variable that was defined.
@@ -37,43 +38,8 @@ module.exports = {
 		}
 		else if (typeof value === 'object') {
 	
-			//
-			// This is a lambda function. We need to go and rename variables.
-			// Here we need to pre process functions to protect local variables.
-			//
-	
-	
-			var prefixFunctionName = variable;
-			var prefixedParameterNames = [];
-	
-			//
-			// Convert the old parameters into the new ones.
-			//
-			for (var i = 0; i < value.parameters.length; i++) {
-				prefixedParameterNames.push( value.parameters[i].val );
-	
-				value.parameters[i].val = prefixFunctionName.val + '_' + value.parameters[i].val;
-			}        
-	
-			//
-			// Replace local variables with new names.
-			//
-			for (var i = 0; i < value.expression.length; i++) {
-	
-				if (prefixedParameterNames.contains(value.expression[i].val)) {
-	
-					value.expression[i].val = prefixFunctionName.val + '_' + value.expression[i].val;
-				}
-			}  
-	
-			alist.alist = alist.makeCons( alist.makeCons(variable, value),  alist.alist);
+
+			return constants.TRUE;
 		}
-		else {
-	
-			console.log("Feature not added yet.");
-			process.exit(1);
-		}
-	
-		return true;
 	}
 }

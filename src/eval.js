@@ -24,66 +24,43 @@ var evaluation = {
 			var car = SEXPR.car;
 			var cdr = SEXPR.cdr;
 			
-			
 			//
-			// We have a cons inside of a cons.
+			// Check to see if the first car atom that is not a cons is a symbol.
 			//
 			if ( car.type == constants.CONS ) {
 				
 				//
-				// Look at the inner cons and see what to do.
+				// If we have a cons inside of a cons then we go down the rabbit hole...
 				//
-				if ( car.car.car.type == constants.SYMBOL && car.car.car.val.toUpperCase() == constants.LAMBDA ) {
-								
+				car = this.eval(car.car);
+			}	
+			
+			
+			if ( car.type == constants.SYMBOL ) {
+			
+				//
+				// Look the symbol up in the symbol table.
+				//
+				var lookupValue = symbolTable.lookup( car );
+				
+				if ( lookupValue.type == constants.PRIM ) {
+					
 					//
-					// The lambda list is the car.
-					// The actuals is the cdr. ( Cdr can be null )
+					// If the lookup value is prim then the symbol we are looking at is a primitive function.
+					// We pass everything that is connected with the symbol which is all nodes off of the cdr.
 					//
-					return primFunctions.lambda(SEXPR);
+					// lookupValue.val is the array index of where the prim function is located.
+					//
+				
+					return primFunctions.primfns[lookupValue.val]( cdr );
 				}
 			}
- 			else {
-	 			
-	 			
-	 			//
-	 			//
-	 			//
-	 			if ( car.type == constants.SYMBOL ) {
-	 				
-	 				var lookupValue = symbolTable.lookup( car );
-	 				
-	 				if ( lookupValue.type == constants.PRIM ) {
-	 					
-	 					//
-	 					// If the lookup value is prim then the symbol we are looking at is a primitive function.
-	 					// We pass everything that is connected with the symbol which is all nodes off of the cdr.
-	 					//
-	 					// lookupValue.val is the array index of where the prim function is located.
-	 					//
-	 				
-	 					return primFunctions.primfns[lookupValue.val]( cdr );
-	 				
-	 				}
-	 				else if ( lookupValue.type != constants.NULL ) {
-	 				
-	 					return lookupValue.val;
-	 				}
-	 				else {
-	 				
-	 					console.log("Undefined symbol: " + car.val);
-	 					return false;
-	 				}
-	 			}
-	 			else {
-	 				
-	 				//
-	 				// If the sexpr is not a cons then it is an atom.
-	 				//
-	 				
-	 				return car.val;
-	 			}
-	 			
- 			} 						
+			else if ( car.type == constants.LAMBDA ) {
+				
+				this.lambda( car, cdr );
+			}	
+			
+	
 		}
 		else {
 			
@@ -92,6 +69,44 @@ var evaluation = {
 			//
 			return SEXPR.val;
 		}
+	},
+	//
+	// Primitive Built-in Macro Lambda
+	//
+	lambda : function ( car, cdr ) {
+	
+
+		// If function is not called with actualls then we dont have to eval it.
+
+		console.log(cdr);
+		
+		return 0;
+	
+	
+		
+		var lambdaParameters = lambdaFunction.parameters;
+		var lambdaExpression = lambdaFunction.expression;
+		
+		if (lambdaParameters.length !== parentExpression.length - 1) {
+		
+			console.log("Lambda function " + parentExpression[0].val + " invoked with invalid parameters.");
+			process.exit(1);
+		}
+		
+		
+		//
+		// Add the temp variables into the alist.
+		//
+		for (var i = 1, j = 0; i < parentExpression.length; i++, j++) {
+		
+			alist.alist = alist.makeCons( alist.makeCons(lambdaParameters[j], alist.makeItem( "NUMBER", parentExpression[i].val)),  alist.alist);
+		}
+		
+		//
+		// Evaluate the function expression.
+		//
+		return evaluation.eval({ type:'LIST', val:lambdaExpression });
+		
 	}	
 };
 
