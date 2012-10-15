@@ -78,36 +78,26 @@ var evaluation = {
 
 		// If function is not called with actualls then we dont have to eval it.
 	
-		console.log(car);
-		console.log(cdr);
-		
-		return 0;
+		var formals = car.formals;
+		var body = car.body;
+		var actuals = cdr;
 	
 	
+		//
+		// Check to make sure that the number of actuals is correct. 
+		//
 		
-		var lambdaParameters = lambdaFunction.parameters;
-		var lambdaExpression = lambdaFunction.expression;
-		
-		if (lambdaParameters.length !== parentExpression.length - 1) {
-		
-			console.log("Lambda function " + parentExpression[0].val + " invoked with invalid parameters.");
-			process.exit(1);
+		var helpers = require('helpers/lambda.js');
+		if ( !helpers.parameterChecking(actuals, formals) ) {
+			return constants.FALSE;
 		}
 		
 		
-		//
-		// Add the temp variables into the alist.
-		//
-		for (var i = 1, j = 0; i < parentExpression.length; i++, j++) {
+		// Throw the variables onto the run time stack. 
 		
-			alist.alist = alist.makeCons( alist.makeCons(lambdaParameters[j], alist.makeItem( "NUMBER", parentExpression[i].val)),  alist.alist);
-		}
 		
-		//
-		// Evaluate the function expression.
-		//
-		return evaluation.eval({ type:'LIST', val:lambdaExpression });
 		
+		return 0;		
 	}	
 };
 

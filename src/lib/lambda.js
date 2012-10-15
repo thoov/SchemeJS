@@ -3,8 +3,9 @@ var constants = require('../constants.js');
 //
 // Lambda Function
 //
-// Example:
+// Example: 
 /*
+
 {typ: "LAMBDA",
  formals: {typ: "CONS",
 		   car: {typ: "SYMBOL", val: "xx"},
