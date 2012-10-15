@@ -8,20 +8,35 @@ var symbolTable = require('../symbolTable.js');
 module.exports = {
 
 	def : function (SEXPR) {
-
-		console.log(SEXPR);
 		
 		//
 		// This is the symbol that we are defining
 		//
 		var variable = SEXPR.car;
 		
+		//
+		// Error checking
+		//
 		if (variable.type !== constants.SYMBOL) {
 		
 			console.log('Invalid definition type. Must be a symbol, a ' + variable.type + ' given.');
-			process.exit(1);
+			return constants.FALSE;
 		}
+		else if (SEXPR.cdr.type === constants.NULL) {
 			
+			console.log('Invalid number of parameters passed into def. Must pass 2 only 1 given.');
+			return constants.FALSE;
+		}
+		else if (SEXPR.cdr.cdr.type !== constants.NULL) {
+			
+			console.log('Invalid number of parameters passed into def. Must pass 2, more than 2 given.');
+			return constants.FALSE;
+		}
+		
+		
+		//
+		// Variable is bound to value.
+		//
 		var value = evaluation.eval(SEXPR.cdr);
 		
 			
@@ -36,10 +51,11 @@ module.exports = {
 	
 			symbolTable.alist = symbolTable.makeCons( symbolTable.makeCons(variable, symbolTable.makeItem( constants.STRING, value)),  symbolTable.alist);
 		}
-		else if (typeof value === 'object') {
-	
-
-			return constants.TRUE;
+		else {
+			
+			symbolTable.alist = symbolTable.makeCons( symbolTable.makeCons(variable, value),  symbolTable.alist);
 		}
+		
+		return constants.TRUE;
 	}
 }

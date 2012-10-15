@@ -77,7 +77,8 @@ var evaluation = {
 	
 
 		// If function is not called with actualls then we dont have to eval it.
-
+	
+		console.log(car);
 		console.log(cdr);
 		
 		return 0;

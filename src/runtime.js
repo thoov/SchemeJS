@@ -4,7 +4,7 @@
 
 module.exports = {
 
-	alist : { type:'NULL' },
+	activeRecord : { type:'NULL' },
 
 	makeCons : function ( car, cdr ) {
 		return { type:'CONS', car:car, cdr:cdr };
@@ -18,32 +18,12 @@ module.exports = {
 
 		return { type:identifier.toUpperCase(), val:value };
 	},
-	makePrimFunction : function ( number ) {
 
-		return { type:'PRIM', val:number };
-	},
-	makeConstant : function ( value ) {
-
-	},
 	initialize : function () {
-		//
-		// load the primative functions and constants into the alist.
-		//
-		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', 'def'), this.makePrimFunction(1)),  this.alist);
-		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', '+'), this.makePrimFunction(2)),  this.alist);
-		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', '-'), this.makePrimFunction(3)),  this.alist);
-		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', 'PI'), this.makeItem( 'NUMBER', 3.14)),  this.alist);
-		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', 'lambda'), this.makePrimFunction(4)),  this.alist);
-		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', '*'), this.makePrimFunction(5)),  this.alist);
-		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', '/'), this.makePrimFunction(6)),  this.alist);
-		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', '='), this.makePrimFunction(7)),  this.alist);
-		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', 'if'), this.makePrimFunction(8)),  this.alist);
-		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', 'quote'), this.makePrimFunction(9)),  this.alist);
-		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', 'cons'), this.makePrimFunction(10)),  this.alist);
-		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', 'length'), this.makePrimFunction(11)),  this.alist);
+
 	},
 
-	lookup : function (symbol) {
+	search : function (symbol) {
 
 		var alistPtr = this.alist;
 
@@ -66,23 +46,18 @@ module.exports = {
 		return false;
 	},
 
-	remove : function (symbol) {
-
+	//
+	// Push a symbol onto the stack.
+	//
+	push : function( symbol ) {
+		
+		
 	},
 
-	print : function () {
+	//
+	// Pop symbols off of the runtime stack.
+	//
+	pop : function (symbol) {
 
-		var alistPtr = this.alist;
-
-		while (alistPtr.type !== 'NULL') {
-
-			console.log(alistPtr.car.car.val);
-
-			alistPtr = alistPtr.cdr; // "advance the pointer"
-
-			// If null then we are at the end of the alist.
-			if (alistPtr.type === 'NULL') { alistPtr = { type:'NULL' }; }     
-		}
 	}
-
 }
