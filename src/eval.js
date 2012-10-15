@@ -1,6 +1,7 @@
 var symbolTable = require('./symbolTable.js');
 var primFunctions = require('./primitives.js');
 var constants = require('./constants.js');
+var helpers = require('./helpers/lambda.js');
 
 //
 // The evaluation and lambda evaluation methods.
@@ -23,7 +24,7 @@ var evaluation = {
 			
 			var car = SEXPR.car;
 			var cdr = SEXPR.cdr;
-			
+					
 			//
 			// Check to see if the first car atom that is not a cons is a symbol.
 			//
@@ -54,13 +55,20 @@ var evaluation = {
 				
 					return primFunctions.primfns[lookupValue.val]( cdr );
 				}
+				else {
+					
+				}
 			}
 			else if ( car.type == constants.LAMBDA ) {
 				
-				this.lambda( car, cdr );
+				return this.lambda( car, cdr );
 			}	
 			
 	
+		}
+		else if ( SEXPR.type == constants.SYMBOL ) {
+			
+			return symbolTable.lookup( SEXPR ).val;
 		}
 		else {
 			
@@ -79,25 +87,32 @@ var evaluation = {
 		// If function is not called with actualls then we dont have to eval it.
 	
 		var formals = car.formals;
-		var body = car.body;
+		var body = car.body.car;
 		var actuals = cdr;
 	
+		//
+		// Push a stack level onto the symbol table.
+		//
+		symbolTable.pushStackLevel();
 	
 		//
 		// Check to make sure that the number of actuals is correct. 
 		//
-		
-		var helpers = require('helpers/lambda.js');
-		if ( !helpers.parameterChecking(actuals, formals) ) {
+		// This will also push the formals and their values onto the symbol table.
+		//
+		if ( helpers.bindParameters(formals, actuals) === constants.FALSE ) {
+			
+			symbolTable.popOffTopStackLevel(); // Remove any bad variables that may have been added to the stack.
+			
 			return constants.FALSE;
 		}
 		
-		
-		// Throw the variables onto the run time stack. 
-		
-		
-		
-		return 0;		
+		//
+		// Now we evaluate the body.
+		//
+		var result = this.eval( body );		
+		symbolTable.popOffTopStackLevel(); // Pop off a level for every level of recusion.
+		return result;
 	}	
 };
 

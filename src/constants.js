@@ -14,6 +14,7 @@ module.exports = {
 	CONS   : 'CONS',
 	PRIM   : 'PRIM',
 	TRUE   : '#t',
-	FALSE  : '#f'
+	FALSE  : '#f',
+	LEVEL  : 'LEVEL'
 	
 };

@@ -1,3 +1,4 @@
+var constants = require('./constants.js');
 //
 // This is where the symbol table or alist is stored. It also contains helper
 // functions to search and store new items into the symbol table.
@@ -6,6 +7,8 @@
 module.exports = {
 	
 	alist : { type:'NULL' },
+	
+	currentStackLevel : 0,
 	
 	makeCons : function ( car, cdr ) {
 		return { type:'CONS', car:car, cdr:cdr };
@@ -22,11 +25,9 @@ module.exports = {
 	makePrimFunction : function ( number ) {
 	
 		return { type:'PRIM', val:number };
-	},
-	makeConstant : function ( value ) {
-		
-	},
+	},	
 	initialize : function () {
+		
 		//
 		// load the primative functions and constants into the alist.
 		//
@@ -67,22 +68,60 @@ module.exports = {
 		return false;
 	},
 	
-	remove : function (symbol) {
+	//
+	// Push runtime variables onto the symbol table. They are divided by stack levels.
+	//
+	push : function ( formal, actual ) {
 		
+		this.alist = this.makeCons( this.makeCons( this.makeItem( 'SYMBOL' , formal.val ), actual ),  this.alist );
+	},
+	
+	//
+	// Push a runtime stack onto the symbol table.
+	//
+	pushStackLevel : function () {
+		
+		this.currentStackLevel = ++this.currentStackLevel;
+		this.alist = this.makeCons( this.makeCons(this.makeItem( constants.LEVEL, "STACK LEVEL " + this.currentStackLevel ), this.makeItem( constants.NUMBER, this.currentStackLevel)),  this.alist);
+	},
+	
+	//
+	// Pop off the top stack level.
+	//
+	popOffTopStackLevel : function () {
+		
+		var alistPtr = this.alist;
+				
+		while ( alistPtr.type !== constants.NULL ) {
+						
+			this.alist = alistPtr;
+			
+			if ( alistPtr.car.car.type == constants.LEVEL ) {
+						
+				this.alist = alistPtr.cdr; // Pop off the stack level cons.
+				break;
+			}
+			
+			alistPtr = alistPtr.cdr; // "advance the pointer" 
+		}
+
+		this.currentStackLevel = --this.currentStackLevel;
+		
+		return constants.TRUE;
 	},
 	
 	print : function () {
 
 		var alistPtr = this.alist;
 	
-		while (alistPtr.type !== 'NULL') {
+		while (alistPtr.type !== constants.NULL) {
 	
 			console.log(alistPtr.car.car.val);
 	
 			alistPtr = alistPtr.cdr; // "advance the pointer"
 	
 			// If null then we are at the end of the alist.
-			if (alistPtr.type === 'NULL') { alistPtr = { type:'NULL' }; }     
+			if ( alistPtr.type === constants.NULL ) { alistPtr = { type:constants.NULL }; }     
 		}
 	}
 	
