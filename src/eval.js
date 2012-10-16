@@ -44,6 +44,7 @@ var evaluation = {
 				//
 				var lookupValue = symbolTable.lookup( car );
 				
+								
 				if ( lookupValue.type == constants.PRIM ) {
 					
 					//
@@ -116,6 +117,7 @@ var evaluation = {
 			
 			return constants.FALSE;
 		}
+		
 		
 		//
 		// Now we evaluate the body.

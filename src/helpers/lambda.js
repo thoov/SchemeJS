@@ -12,6 +12,15 @@ module.exports = {
 		if ( formals.type === constants.SYMBOL ) {
 			
 			return symbolTable.push( formals, actuals );
+		} 
+		else if ( formals.type === constants.NULL ) {
+						
+			if ( actuals.type !== constants.NULL ) {
+				
+				console.log("Invalid number of parameters. There should be no actuals passed.");
+				return constants.FALSE;
+			}
+			return constants.TRUE;
 		}
 				
 		
