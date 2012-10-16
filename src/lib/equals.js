@@ -1,28 +1,30 @@
+var constants = require('../constants.js');
+var evaluation = require('../eval.js');
+
 //
 // Equals Function
 //
-// Prim function id: 6
 //
-//
-
 module.exports = {
 
-	equals : function (sexpr) {
+	equals : function ( SEXPR ) {
 
-		var equals = sexpr[0]; // The = sign
-		
-		var value = evaluation.eval(sexpr[1]); // The first element after the = sign goes on the left hand side of the equals sign.
-		
-		//
-		// Loop through the rest of the elments and add them up.
-		//
-		for (var i = 2; i < sexpr.length; i++) {
-			
-			if( value != evaluation.eval(sexpr[i]) ) {
-				return '#f';
+		if ( SEXPR.type === constants.NULL )
+			return constants.TRUE; 
+
+		var compareAgainstValue = evaluation.eval(SEXPR.car);
+	
+		SEXPR = SEXPR.cdr; // Move passed the first term as that is now in compareAgainstValue.
+				
+		while ( SEXPR.type !== constants.NULL ) {
+						
+			if( compareAgainstValue != evaluation.eval( SEXPR.car ) ) {
+				return constants.FALSE;
 			}
+			
+			SEXPR = SEXPR.cdr;
 		}
-		
-		return '#t';
+				
+		return constants.TRUE;
 	}
 }
