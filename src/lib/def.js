@@ -37,7 +37,7 @@ module.exports = {
 		//
 		// Variable is bound to value.
 		//
-		var value = evaluation.eval(SEXPR.cdr);
+		var value = evaluation.eval(SEXPR.cdr.car);
 		
 			
 		//
@@ -51,8 +51,7 @@ module.exports = {
 	
 			symbolTable.alist = symbolTable.makeCons( symbolTable.makeCons(variable, symbolTable.makeItem( constants.STRING, value)),  symbolTable.alist);
 		}
-		else {
-			
+		else {		
 			symbolTable.alist = symbolTable.makeCons( symbolTable.makeCons(variable, value),  symbolTable.alist);
 		}
 		

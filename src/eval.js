@@ -38,7 +38,7 @@ var evaluation = {
 			
 			
 			if ( car.type == constants.SYMBOL ) {
-			
+						
 				//
 				// Look the symbol up in the symbol table.
 				//
@@ -55,8 +55,18 @@ var evaluation = {
 				
 					return primFunctions.primfns[lookupValue.val]( cdr );
 				}
+				else if ( lookupValue.type === constants.LAMBDA ) {
+				
+					return this.lambda( lookupValue, cdr );
+				}
+				else if (lookupValue.type !== constants.NULL) {
+				
+					return lookupValue.val;
+				}
 				else {
-					
+				
+					console.log("Undefined symbol: " + car);
+					return constants.FALSE;
 				}
 			}
 			else if ( car.type == constants.LAMBDA ) {
@@ -64,7 +74,7 @@ var evaluation = {
 				return this.lambda( car, cdr );
 			}	
 			
-	
+			return car;
 		}
 		else if ( SEXPR.type == constants.SYMBOL ) {
 			
