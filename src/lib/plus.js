@@ -1,6 +1,5 @@
 var constants = require('../constants.js');
 var evaluation = require('../eval.js');
-var helper = require('../helpers/mathOperations.js');
 
 //
 // + function
