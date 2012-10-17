@@ -11,7 +11,7 @@
 
 module.exports = {
 	
-	len : function (sexpr) {
+	length : function (sexpr) {
 		
 		var lengthKeyword = sexpr[0];
 			

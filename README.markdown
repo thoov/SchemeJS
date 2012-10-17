@@ -1,4 +1,4 @@
-Scheme Interpreter by Travis Hoover:
+Scheme Interpreter:
 ======
 
 Basic Scheme interpreter written in javascript with help from jscc. Only a small subset of scheme has been implemented and some parts have been renamed or changed for convenience.
@@ -6,6 +6,19 @@ Basic Scheme interpreter written in javascript with help from jscc. Only a small
 Requirements:
 --------
 * NodeJS ( tested on v0.8+ )
+* JS/CC ( v0.30 )
+
+How to run:
+--------
+
+For node, using JS/CC uses the following command line: 
+<pre><b>node jscc.js -v -o scheme.js -p node -t driver_node.js_ scheme.par</b></pre>
+</pre>
+
+Once the javascript file has been compiled, you can run the interpreter via: 
+<pre><b>node scheme.js -t</b></pre>
+</pre>
+
 
 Sample expressions:
 --------
@@ -40,19 +53,6 @@ true
 bar
 </code></pre>
 
-How to run:
---------
-
-First you must compile the jscc scheme.par file using node. This produces a scheme.js file which we will have node run.
-
-<code>node jscc.js -o scheme.js scheme.par</code>
-
---------
-
-Second we will have node run our newly compiled javascript file.
-
-<code>node scheme.js</code>
-
 
 Debugging
 --------
@@ -78,3 +78,11 @@ PI
 +
 def
 </code></pre>
+
+http://icem-www.folkwang-hochschule.de/~finnendahl/cm_kurse/doc/schintro/schintro_93.html
+
+http://download.plt-scheme.org/doc/html/guide/Pairs__Lists__and_Scheme_Syntax.html
+
+http://www.cs.indiana.edu/scheme-repository/R4RS/r4rs_8.html
+
+http://classes.soe.ucsc.edu/cmps112/Spring03/languages/scheme/SchemeTutorialB.html
