@@ -5,6 +5,12 @@ module.exports = {
 
 	minus : function ( SEXPR ) {
 
+		if ( SEXPR.type === constants.NULL ) {
+			
+			console.log("Invalid number of arguments.");
+			return constants.FALSE;
+		}
+		
 		var leftOperand = evaluation.eval(SEXPR.car);
 				
 		var currentExpression = SEXPR.cdr;

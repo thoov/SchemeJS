@@ -1,5 +1,6 @@
 var constants = require('../constants.js');
 var evaluation = require('../eval.js');
+var helper = require('../helpers/mathOperations.js');
 
 //
 // + function
@@ -11,7 +12,15 @@ var evaluation = require('../eval.js');
 module.exports = {
 
 	plus : function ( SEXPR ) {
-												
+					
+		var argumentCheck = helper.argCheck( SEXPR );
+		
+		if ( SEXPR.type === constants.NULL ) {
+			
+			console.log("Invalid number of arguments.");
+			return constants.FALSE;
+		}
+									
 		var leftOperand = evaluation.eval(SEXPR.car);
 				
 		var currentExpression = SEXPR.cdr;
