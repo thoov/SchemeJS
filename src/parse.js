@@ -40,7 +40,8 @@ module.exports = {
 	//	
 	createCons : function (car, cdr) {
 	
-		if(cdr == null) {
+		if( cdr == null ) {
+			
 			return { type:constants.CONS, car:car, cdr:this.createNull() };
 		}
 	

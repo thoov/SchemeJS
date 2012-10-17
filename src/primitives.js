@@ -11,18 +11,25 @@ module.exports = {
 	primfns : [],
 	
 	initialize : function() {
+		
 		/*
+		// 
+		// Load all of the primitive functions that are in lib.
+		//
 		var pFunctions = [];
 		var count = 0;
 		require("fs").readdirSync("./src/lib").forEach(function(file) {
 			
+			// TODO: make sure they are only .js files.
+			
 			var functionName = file.substr(0, 3);
 			console.log(file)
-			pFunctions[++count] = require('./lib/' + file).functionName;
+			pFunctions[++count] = require('./lib/' + file)[functionName];
 		});
 
 
-		console.log(pFunctions);*/		
+		console.log(pFunctions);		
+		*/
 		
 		//
 		// Prim function for def
@@ -73,7 +80,7 @@ module.exports = {
 		// (if TEST THEN
 		//				ELSE)
 		//
-		this.primfns[8] = require('./lib/if.js').iff;
+		this.primfns[8] = require('./lib/iff.js').iff;
 		
 		//
 		// Prim function for quote
@@ -102,7 +109,7 @@ module.exports = {
 		// (length (23 23 23))
 		// 		=> 3
 		//
-		this.primfns[11] = require('./lib/length.js').len;
+		this.primfns[11] = require('./lib/length.js').length;
 		
 	}
 }
