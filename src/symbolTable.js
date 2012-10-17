@@ -31,19 +31,8 @@ module.exports = {
 		//
 		// load the primative functions and constants into the alist.
 		//
-		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', 'def'), this.makePrimFunction(1)),  this.alist);
-		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', '+'), this.makePrimFunction(2)),  this.alist);
-		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', '-'), this.makePrimFunction(3)),  this.alist);
 		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', 'PI'), this.makeItem( 'NUMBER', 3.14)),  this.alist);
-		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', 'lambda'), this.makePrimFunction(4)),  this.alist);
-		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', '*'), this.makePrimFunction(5)),  this.alist);
-		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', '/'), this.makePrimFunction(6)),  this.alist);
-		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', '='), this.makePrimFunction(7)),  this.alist);
-		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', 'if'), this.makePrimFunction(8)),  this.alist);
-		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', 'quote'), this.makePrimFunction(9)),  this.alist);
-		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', 'cons'), this.makePrimFunction(10)),  this.alist);
-		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', 'length'), this.makePrimFunction(11)),  this.alist);
-		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', 'list'), this.makePrimFunction(12)),  this.alist);
+
 	},
 	
 	lookup : function (symbol) {
@@ -75,6 +64,14 @@ module.exports = {
 	push : function ( formal, actual ) {
 		
 		this.alist = this.makeCons( this.makeCons( this.makeItem( constants.SYMBOL , formal.val ), actual ),  this.alist );
+	},
+	
+	//
+	// Push runtime variables onto the symbol table. They are divided by stack levels.
+	//
+	pushPrimitive : function ( symbol, number ) {
+		
+		this.alist = this.makeCons( this.makeCons(this.makeItem( constants.SYMBOL, symbol), this.makePrimFunction(number)),  this.alist);
 	},
 	
 	//

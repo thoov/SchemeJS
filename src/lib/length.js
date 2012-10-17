@@ -3,6 +3,8 @@ var evaluation = require('../eval.js');
 
 module.exports = {
 	
+	symbol : "length",
+	
 	length : function ( SEXPR ) {
 				
 		var lengthCount = 0;

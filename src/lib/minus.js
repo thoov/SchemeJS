@@ -3,6 +3,8 @@ var evaluation = require('../eval.js');
 
 module.exports = {
 
+	symbol : "-",
+	
 	minus : function ( SEXPR ) {
 
 		if ( SEXPR.type === constants.NULL ) {

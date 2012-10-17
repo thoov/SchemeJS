@@ -2,6 +2,8 @@ var constants = require('../constants.js');
 var evaluation = require('../eval.js');
 
 module.exports = {
+	
+	symbol : "if",
 
 	iff : function ( SEXPR ) {
 	

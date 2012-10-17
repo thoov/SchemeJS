@@ -10,10 +10,10 @@ var evaluation = require('../eval.js');
 //
 module.exports = {
 
+	symbol : "+",
+	
 	plus : function ( SEXPR ) {
-					
-		var argumentCheck = helper.argCheck( SEXPR );
-		
+							
 		if ( SEXPR.type === constants.NULL ) {
 			
 			console.log("Invalid number of arguments.");

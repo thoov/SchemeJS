@@ -4,6 +4,8 @@ var evaluation = require('../eval.js');
 
 module.exports = {
 
+	symbol : "list",
+	
 	list : function ( SEXPR ) {
 
 		var arguments = SEXPR;

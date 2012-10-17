@@ -23,7 +23,9 @@ var constants = require('../constants.js');
 						   cdr: {typ: "NULL"}}}}}}
 */
 module.exports = {
-
+	
+	symbol : "lambda",
+	
 	lambda : function ( SEXPR ) {
 
 		var car = SEXPR.car; // The parameters are in the car

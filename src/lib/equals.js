@@ -6,6 +6,8 @@ var evaluation = require('../eval.js');
 //
 //
 module.exports = {
+	
+	symbol : "=",
 
 	equals : function ( SEXPR ) {
 

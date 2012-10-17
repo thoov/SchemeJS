@@ -6,7 +6,9 @@ var symbolTable = require('../symbolTable.js');
 // Def Function
 //
 module.exports = {
-
+	
+	symbol : "def",
+	
 	def : function (SEXPR) {
 		
 		//
