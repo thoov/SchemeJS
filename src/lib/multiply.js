@@ -1,27 +1,20 @@
-//
-// Multiply Function
-//
-// Prim function id: 5
-//
-//
+var constants = require('../constants.js');
+var evaluation = require('../eval.js');
 
 module.exports = {
 
-	multiply : function (sexpr) {
+	multiply : function ( SEXPR ) {
 
-		var multiplcation = sexpr[0]; // The * sign
-	
-		var value = evaluation.eval(sexpr[1]); // The first element after the * sign goes on the left hand side of the plus sign.
-	
-	
-		//
-		// Loop through the rest of the elments and add them up.
-		//
-		for (var i = 2; i < sexpr.length; i++) {
-	
-			value *= evaluation.eval(sexpr[i]);
+		var leftOperand = evaluation.eval(SEXPR.car);
+				
+		var currentExpression = SEXPR.cdr;
+		while ( currentExpression.type != constants.NULL ) {
+			
+			leftOperand *= evaluation.eval(currentExpression.car);
+			
+			currentExpression = currentExpression.cdr; // Advance the "pointer" to the next token
 		}
-	
-		return value;
+		
+		return leftOperand;
 	}
 }
