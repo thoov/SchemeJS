@@ -14,9 +14,8 @@ evaluation.initialize();
 
 /~ Token pattern matching rules ~/
     '[ ]?\)'                                      RPAREN
-    '\([ ]?'                                      LPAREN
+    '[ ]?\([ ]?'                                  LPAREN
     '\.'                                          DOT
-    '\''
     '[0-9]+[ ]?|[0-9]+\.[0-9]*|[0-9]*\.[0-9]+'    NUMBER   [* %match = parseFloat( %match ); *]
     '[^\(\)0-9\.\'\`\,\@" ][^\) ]*'               SYMBOL   [* /*symbols cannot begin with digits, parens, quotes, dots, etc.*/ *]
     '\"[^"]*\"'                                   STRING   [* %match = %match.substr( 1, %match.length - 2 ); *]
@@ -33,19 +32,22 @@ sexpr:      atom
             ;
 
 list:       LPAREN RPAREN	                         [* %% = parse.createNull(); *]
-	        | LPAREN members RPAREN                  [* %% = parse.createList(%2) *]
-	        | LPAREN members DOT sexpr RPAREN        [* %% = parse.createDotList(%2, %4); *]
+            | LPAREN atom members RPAREN             [* %% = parse.createCons(%2, %3); /* a list must first start with a symbol */ *]
+            | LPAREN atom RPAREN                     [* %% = parse.createCons(%2); *]
+            | LPAREN list RPAREN                     [* %% = parse.createCons(parse.createCons(%2)); *]
+            | LPAREN list members RPAREN             [* %% = parse.createCons(parse.createCons(%2), %3); *]
             ;
 
-members:    members sexpr                            [* %% = parse.arrayAppend(%1, %2); *]
-            | sexpr                                  [* %% = %1; *]
+members:    sexpr members                            [* %% = parse.createCons(%1, %2); *]
+            | DOT sexpr                              [* %% = %2; *]
+            | sexpr                                  [* %% = parse.createCons(%1); *]
             ;
 
-atom:       NUMBER                                   [* %% = parse.createItem('NUMBER', %1); *]
-            | SYMBOL                                 [* %% = parse.createItem('SYMBOL', %1); *]
-            | STRING                                 [* %% = parse.createItem('STRING', %1); *]
+atom:       NUMBER                                   [* %% = parse.createAtom('NUMBER', %1); *]
+            | SYMBOL                                 [* %% = parse.createAtom('SYMBOL', %1); *]
+            | STRING                                 [* %% = parse.createAtom('STRING', %1); *]
             ;
-            
+
 
 
 [*
@@ -53,51 +55,99 @@ var error_offsets = new Array();
 var error_lookaheads = new Array();
 var error_count = 0;
 var DEBUG = false;
+var TESTS = false;
+var TEST_COUNT = 0;
+var TEST_ERRORS = 0;
+var TEST_PASSES = 0;
 
-console.log("Welcome to the Scheme REPL by Travis Hoover");
+var PASSED = true;
+
+console.log("Welcome to the Scheme REPL");
 
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
-process.stdout.write("> ");
 
 process.argv.forEach(function (val, index, array) {
     if( val === '--debug' || val === '-d' ){
         DEBUG = true;
     }
+    
+    if( val === '-t' ) {
+        
+        TESTS = true;
+    }
 });
+
+
+if (TESTS) {
+    
+    process.stdout.write("\n==== Running Tests ====\n\n");
+    
+    var parseTest = require('./tests/parseTest.js');
+        
+    for ( i = 0; i < parseTest.tests.length; i++ ) {
+        
+        __NODEJS_parse( parseTest.tests[i], error_offsets, error_lookaheads );
+        
+        if ( JSON.stringify(parse.tokenized) != parseTest.expected[i] ) {
+            
+            process.stdout.write("Failed tests at: " + parseTest.tests[i] + "\n");
+            process.stdout.write("Expected:  " + parseTest.expected[i] + "\n");
+            process.stdout.write("Recieved:  " + JSON.stringify(parse.tokenized) + "\n\n");
+            TEST_ERRORS++;
+            PASSED = false;
+        }
+        else {
+            TEST_PASSES++;
+        }
+        
+
+        TEST_COUNT++;        
+    }
+        
+    process.stdout.write(TEST_PASSES + " successfully tests\n");
+    process.stdout.write(TEST_ERRORS + " failed tests\n");
+    process.stdout.write(TEST_COUNT + " total tests\n\n");
+}
+
+
+//
+// If we passed all of the test go to the REPL.
+//
+if (PASSED)
+    process.stdout.write("> ");
+else
+    process.exit(1);
+
 
 process.stdin.on('data', function (text) {
 
-    // ( R )
-    
+
     text = text.trim();
-    
+
     if( text != "" ) {
-        
-                    
+
         if (text.toLowerCase() == 'print alist') {
-            
+
             evaluation.printSymbols();
         }
         else if (text.toLowerCase() == 'print tokens') {
-            
+
             parse.print(); 
         }
         else {
-        
-            // send text to scheme tokenizer ( E )
+
             if( ( error_count = __NODEJS_parse( text, error_offsets, error_lookaheads ) ) > 0 ) {
-           
+
                 for( var i = 0; i < error_count; i++ )
-                    console.log( "Parse error near " + text.substr( error_offsets[i] ) + ", expecting \"" + error_lookaheads[i].join() + "\"" );
+                    console.log( "Parse error near:_" + text.substr( error_offsets[i] ) + ", expecting \"" + error_lookaheads[i].join() + "\"" );
             }
             else {
-          
-                  
-                console.log(evaluation.eval(parse.tokenized)); // Print the evaluated expression ( P )
+
+                console.log(evaluation.eval(parse.tokenized));
             }
         }
     }
-    process.stdout.write("> "); // now loop or wait for user input again ( L )
+    process.stdout.write("> ");
 });
 *]

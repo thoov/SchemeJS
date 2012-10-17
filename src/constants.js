@@ -1,10 +1,20 @@
 //
+//
 // Constants
 //
-var NUMBER = 'NUMBER';
-var SYMBOL = 'SYMBOL';
-var STRING = 'STRING';
-var CONS   = 'CONS';
-var PRIM   = 'PRIM';
-var TRUE   = '#t';
-var FALSE  = '#f';
+//
+module.exports = {
+
+	NULL   : 'NULL',
+ 	NUMBER : 'NUMBER',
+	SYMBOL : 'SYMBOL',
+	STRING : 'STRING',
+	LAMBDA : 'LAMBDA',
+	MACRO  : 'MACRO',
+	CONS   : 'CONS',
+	PRIM   : 'PRIM',
+	TRUE   : '#t',
+	FALSE  : '#f',
+	LEVEL  : 'LEVEL'
+	
+};
