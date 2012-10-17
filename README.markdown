@@ -25,7 +25,7 @@ Sample expressions:
 Current built-in standard functions: def, +, -, ., *, /,  and lambda.
 
 <pre><code>> (def helloWorld (+ "Hello" " " "World"))
-true
+#t
 > helloWorld
 Hello World
 </code></pre>
@@ -36,7 +36,7 @@ Hello World
 </code></pre>
 
 <pre><code>> (def double5 (lambda (x) ( * x x ((lambda (y) (+ y 5)) 6))))
-true
+#t
 > (double5 3)
 99
 </code></pre>
@@ -67,7 +67,7 @@ To print the tokenized string, use print tokens
 
 To print the alist also know as the symbol list, use print alist
 <pre><code>> (def testing 23)    
-true
+#t
 > print alist
 testing
 /
@@ -78,11 +78,3 @@ PI
 +
 def
 </code></pre>
-
-http://icem-www.folkwang-hochschule.de/~finnendahl/cm_kurse/doc/schintro/schintro_93.html
-
-http://download.plt-scheme.org/doc/html/guide/Pairs__Lists__and_Scheme_Syntax.html
-
-http://www.cs.indiana.edu/scheme-repository/R4RS/r4rs_8.html
-
-http://classes.soe.ucsc.edu/cmps112/Spring03/languages/scheme/SchemeTutorialB.html
