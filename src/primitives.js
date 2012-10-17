@@ -111,5 +111,7 @@ module.exports = {
 		//
 		this.primfns[11] = require('./lib/length.js').length;
 		
+		this.primfns[12] = require('./lib/list.js').list;
+		
 	}
 }

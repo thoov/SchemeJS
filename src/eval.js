@@ -86,6 +86,10 @@ var evaluation = {
 			//
 			// If the sexpr is not a cons then it is an atom.
 			//
+			if ( SEXPR.type === constants.STRING ) { // If it is a string then we will print the quotes with the string value.
+				return '"' + SEXPR.val + '"';
+			}
+			
 			return SEXPR.val;
 		}
 	},

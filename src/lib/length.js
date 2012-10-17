@@ -1,20 +1,41 @@
-//
-// Length Function
-//
-// Prim function id: 11
-//
-// Returns the length of parameters passed into length.
-//
-// Example: 
-// (length (23 23 23))	=> 3
-//
+var constants = require('../constants.js');
+var evaluation = require('../eval.js');
 
 module.exports = {
 	
-	length : function (sexpr) {
+	length : function ( SEXPR ) {
+				
+		var lengthCount = 0;
 		
-		var lengthKeyword = sexpr[0];
+		if ( SEXPR.type === constants.NULL ) {
 			
-		return sexpr.length - 1; // Everything except the keyword
+			console.log("Must pass an argument into length.");
+			return constants.FALSE;
+		}
+		else if (SEXPR.car.type === constants.NULL ) {
+			
+			return lengthCount;
+		}
+		
+		SEXPR = evaluation.eval(SEXPR.car);
+						
+									
+		//
+		// SEXPR must be a list.
+		//
+		if ( SEXPR.type !== constants.NULL && SEXPR.type !== constants.CONS ) {
+			
+			console.log('Length must be passed a list.');
+			return constants.FALSE;
+		}
+
+		var list = SEXPR;
+		while ( list.type !== constants.NULL ) {
+			
+			lengthCount++;			
+			list = list.cdr;
+		}
+
+		return lengthCount;
 	}
 }
