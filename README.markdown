@@ -5,8 +5,8 @@ Basic Scheme interpreter written in javascript with help from jscc. Only a small
 
 Requirements:
 --------
-* NodeJS ( tested on v0.8+ )
-* JS/CC ( v0.30 )
+* [NodeJS] (http://nodejs.org/) ( tested on v0.8+ ) 
+* [JS/CC] (http://jscc.phorward-software.com/) ( v0.30 )
 
 How to run:
 --------
@@ -22,7 +22,7 @@ Once the javascript file has been compiled, you can run the interpreter via:
 
 Sample expressions:
 --------
-Current built-in standard functions: def, +, -, ., *, /,  and lambda.
+[View All Primitive Functions] (https://github.com/thoov/Scheme-REPL/tree/master/src/lib)
 
 <pre><code>> (def helloWorld (+ "Hello" " " "World"))
 #t
@@ -78,3 +78,15 @@ PI
 +
 def
 </code></pre>
+
+License:
+======
+
+MIT License
+Copyright (c) 2012 Travis Hoover thoov7@gmail.com
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
