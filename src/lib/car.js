@@ -2,7 +2,7 @@ var evaluation = require('../eval.js');
 
 module.exports = {
 
-	name : "car",
+	symbol : "car",
 	
 	car : function ( SEXPR ) {
 

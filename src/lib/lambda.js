@@ -1,5 +1,5 @@
 var constants = require('../constants.js');
-
+var helper = require('../helpers/lambda.js');
 //
 // Lambda Function
 //
@@ -28,10 +28,13 @@ module.exports = {
 	
 	lambda : function ( SEXPR ) {
 
-		var car = SEXPR.car; // The parameters are in the car
-		var cdr = SEXPR.cdr; // The expresion is in the cdr
+		var car = SEXPR.car; // The formals are in the car
+		var cdr = SEXPR.cdr; // The body is in the cdr
+
+		var closedBody = helper.closure( cdr.car, car );
 
 		return { type:constants.LAMBDA, formals:car, body:cdr };
 	}
-}
+	
+};
 

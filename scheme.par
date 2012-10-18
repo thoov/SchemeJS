@@ -2,6 +2,7 @@
 
 var parse = require('./src/parse.js');
 var evaluation = require('./src/eval.js');
+var constants = require('./src/constants.js');
 evaluation.initialize();
 
 *]
@@ -143,8 +144,28 @@ process.stdin.on('data', function (text) {
                     console.log( "Parse error near:_" + text.substr( error_offsets[i] ) + ", expecting \"" + error_lookaheads[i].join() + "\"" );
             }
             else {
-
-                console.log(evaluation.eval(parse.tokenized));
+    
+                var eval = evaluation.eval(parse.tokenized);
+                
+                //
+                // If we have a cons at this point then we need to turn it into "scheme" to be printed.
+                //
+                if ( eval.type !== undefined ) {
+                    /*
+                    var newEvalOutput = '';
+                    while ( eval.type !== constants.NULL ) {
+                        
+                        if ( eval.type === constants.CONS ) {
+                            newEvalOutput = '()';
+                        }
+                    }
+                    console.log(newEvalOutput);
+                    */
+                    //console.log(JSON.stringify(eval, null, 4));
+                }
+                else {
+                    console.log(eval);
+                }
             }
         }
     }

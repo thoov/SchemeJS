@@ -13,6 +13,7 @@ module.exports = {
 	MACRO  : 'MACRO',
 	CONS   : 'CONS',
 	PRIM   : 'PRIM',
+	BOOL   : 'BOOL',
 	TRUE   : '#t',
 	FALSE  : '#f',
 	LEVEL  : 'LEVEL'

@@ -3,7 +3,8 @@ var symbolTable = require('./symbolTable.js');
 
 //
 //
-// All of the primitive functions or built-in functions.
+// Dynamically loads all primitive functions inside of the lib directory.
+// Allows access to an individual prim function based off of its index.
 //
 //
 module.exports = {
@@ -11,7 +12,6 @@ module.exports = {
 	primfns : [],
 	
 	initialize : function() {
-		
 		
 		// 
 		// Load all of the primitive functions that are in lib.
@@ -30,11 +30,10 @@ module.exports = {
 				var primitiveFile = require('./lib/' + file);
 				
 				pFunctions[++count] = primitiveFile[functionName];
-				
+								
 				// Add this to the symbol table.
 				symbolTable.pushPrimitive( primitiveFile.symbol, count );
 			}
-			
 		});
 		
 		this.primfns = pFunctions;		

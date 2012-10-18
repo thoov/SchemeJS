@@ -1,5 +1,6 @@
 var constants = require('../constants.js');
 var symbolTable = require('../symbolTable.js');
+var helper = require('./makeStructure.js');
 
 module.exports = {
 	
@@ -66,6 +67,77 @@ module.exports = {
 			return this.bindParameters( formals.cdr, actuals.cdr );
 		}
 		
+	},
+	
+	inFormals : function ( symbol, formals ) {
+			
+		while ( formals !== undefined && formals.type !== constants.NULL ) {
+		
+			if ( formals.car.val === symbol.val ) {
+				return constants.TRUE;
+			}
+			
+			formals = formals.cdr;
+		}
+		return constants.FALSE;
+	},
+		
+	closure : function ( body, formals ) {
+		
+		
+		//
+		// Here is where we are going to add closure.
+		//
+		// Look for any symbols that are not formals and eval them.
+		//
+		
+		var arguments = body;
+		var newList = helper.makeItem( constants.NULL );
+		while ( arguments.type !== constants.NULL ) {
+						
+			newList = helper.makeCons( arguments.car,  newList);
+			arguments = arguments.cdr;			
+		}
+		
+		
+		//
+		// New list is in reverse order. We will loop through and up it in the correct order.
+		//
+		
+		arguments = newList;
+		newList = helper.makeItem( constants.NULL );
+		
+		while ( arguments.type !== constants.NULL ) {
+		
+			//
+			// Is the symbol in the formals, if so then skip.
+			// Else if it is in the alist and not a prim function then replace it with its value.
+			//
+			var value = arguments.car;
+			
+			if ( value.type === constants.SYMBOL ) {
+				
+				if ( this.inFormals( value, formals ) === constants.FALSE ) {
+					
+					var symbolTableValue = symbolTable.lookup( value );
+
+					if ( symbolTableValue.type !== constants.PRIM ) {
+						
+						value = symbolTableValue;
+					}
+					
+				}
+			}
+			
+			
+					
+			newList = helper.makeCons( value,  newList );
+			arguments = arguments.cdr;
+		}
+		
+		console.log(JSON.stringify( newList, null, 4));
+		
+		return 0;
 	}
 	
 }

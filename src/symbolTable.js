@@ -29,9 +29,11 @@ module.exports = {
 	initialize : function () {
 		
 		//
-		// load the primative functions and constants into the alist.
+		// load the constants into the alist.
 		//
-		this.alist = this.makeCons( this.makeCons(this.makeItem( 'SYMBOL', 'PI'), this.makeItem( 'NUMBER', 3.14)),  this.alist);
+		this.alist = this.makeCons( this.makeCons(this.makeItem( constants.SYMBOL , 'PI' ), this.makeItem( constants.NUMBER, 3.14)),  this.alist);
+		this.alist = this.makeCons( this.makeCons(this.makeItem( constants.SYMBOL , constants.TRUE ), this.makeItem( constants.BOOL , constants.TRUE )),  this.alist);
+		this.alist = this.makeCons( this.makeCons(this.makeItem( constants.SYMBOL , constants.FALSE ), this.makeItem( constants.BOOL , constants.FALSE )),  this.alist);
 
 	},
 	
@@ -67,7 +69,7 @@ module.exports = {
 	},
 	
 	//
-	// Push runtime variables onto the symbol table. They are divided by stack levels.
+	// Add primitive functions that are dynamically loaded to the symbol table.
 	//
 	pushPrimitive : function ( symbol, number ) {
 		
