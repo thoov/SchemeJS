@@ -1,0 +1,5 @@
+(def mkadder (lambda (n) (lambda (x) (+ n x) ) ) )
+(def add100 ( mkadder 100 ))
+(def add8 ( mkadder 8 ))
+(add100 4)
+(add8 3)

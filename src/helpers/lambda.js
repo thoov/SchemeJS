@@ -5,7 +5,51 @@ var structure = require('./makeStructure.js');
 
 module.exports = {
 	
+	replaceActualsWithValues : function (actuals) {
+		
+		var arguments = actuals;
+		var newList = helper.makeItem( constants.NULL );
+		while ( arguments.type !== constants.NULL ) {
+						
+			newList = helper.makeCons( arguments.car,  newList);
+			arguments = arguments.cdr;			
+		}
+		
+		
+		//
+		// New list is in reverse order. We will loop through and up it in the correct order.
+		//
+		
+		arguments = newList;
+		newList = helper.makeItem( constants.NULL );
+		
+		while ( arguments.type !== constants.NULL ) {
+		
+			//
+			// Is the symbol in the formals, if so then skip.
+			// Else if it is in the alist and not a prim function then replace it with its value.
+			//
+			var value = arguments.car;
+			
+			if ( value.type === constants.SYMBOL ) {
+				
+				var symbolTableValue = symbolTable.lookup( value );
+				value = symbolTableValue;				
+			}
+					
+			newList = helper.makeCons( value,  newList );
+			arguments = arguments.cdr;
+		}
+		
+		return newList;		
+	},
+	
 	bindParameters : function (formals, actuals) {
+		
+		//
+		// If any actuals are symbols we need to replace them with there values.
+		//
+		actuals = this.replaceActualsWithValues(actuals);
 		
 		
 		//

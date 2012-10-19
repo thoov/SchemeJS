@@ -109,6 +109,7 @@ var evaluation = {
 		// Push a stack level onto the symbol table.
 		//
 		symbolTable.pushStackLevel();
+		
 	
 		//
 		// Check to make sure that the number of actuals is correct. 
@@ -121,12 +122,12 @@ var evaluation = {
 			
 			return constants.FALSE;
 		}
-		
-		
+						
 		//
 		// Now we evaluate the body.
 		//
 		var result = this.eval( body );		
+		
 		symbolTable.popOffTopStackLevel(); // Pop off a level for every level of recusion.
 		return result;
 	}	
