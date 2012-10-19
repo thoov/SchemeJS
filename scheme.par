@@ -57,6 +57,7 @@ var error_lookaheads = new Array();
 var error_count = 0;
 var DEBUG = false;
 var TESTS = false;
+var FILE = false;
 var TEST_COUNT = 0;
 var TEST_ERRORS = 0;
 var TEST_PASSES = 0;
@@ -69,16 +70,16 @@ process.stdin.resume();
 process.stdin.setEncoding('utf8');
 
 process.argv.forEach(function (val, index, array) {
-    if( val === '--debug' || val === '-d' ){
-        DEBUG = true;
+
+    if( val === '-f' ){
+        
+        FILE = array[index + 1];
     }
-    
-    if( val === '-t' ) {
+    else if( val === '-t' ) {
         
         TESTS = true;
     }
 });
-
 
 if (TESTS) {
     
@@ -115,10 +116,47 @@ if (TESTS) {
 //
 // If we passed all of the test go to the REPL.
 //
-if (PASSED)
-    process.stdout.write("> ");
+if (PASSED) {
+    if( !FILE ) process.stdout.write("> ");
+}
 else
     process.exit(1);
+    
+    
+    
+if ( FILE ) {
+    
+    var fs = require('fs');
+    var array = fs.readFileSync(FILE).toString().split("\n");
+    
+    
+    
+    var count = 0;
+    for(i in array) {
+        array[i] = array[i].trim();
+        console.log( ++count + "\t" + array[i]);
+    }
+    
+    
+    for(i in array) {
+        
+        if( ( error_count = __NODEJS_parse( array[i], error_offsets, error_lookaheads ) ) > 0 ) {
+        
+            for( var i = 0; i < error_count; i++ )
+                console.log( "Parse error near:_" + text.substr( error_offsets[i] ) + ", expecting \"" + error_lookaheads[i].join() + "\"" );
+        }
+        else {
+        
+            var eval = evaluation.eval(parse.tokenized);
+            
+            //
+            // TODO: If we have a cons at this point then we need to turn it into "scheme" to be printed.
+            //
+        
+            console.log(eval);
+        }
+    }
+}
 
 
 process.stdin.on('data', function (text) {
@@ -148,24 +186,10 @@ process.stdin.on('data', function (text) {
                 var eval = evaluation.eval(parse.tokenized);
                 
                 //
-                // If we have a cons at this point then we need to turn it into "scheme" to be printed.
+                // TODO: If we have a cons at this point then we need to turn it into "scheme" to be printed.
                 //
-                if ( eval.type !== undefined ) {
-                    /*
-                    var newEvalOutput = '';
-                    while ( eval.type !== constants.NULL ) {
-                        
-                        if ( eval.type === constants.CONS ) {
-                            newEvalOutput = '()';
-                        }
-                    }
-                    console.log(newEvalOutput);
-                    */
-                    //console.log(JSON.stringify(eval, null, 4));
-                }
-                else {
-                    console.log(eval);
-                }
+
+                console.log(eval);
             }
         }
     }

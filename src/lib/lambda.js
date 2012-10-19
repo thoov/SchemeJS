@@ -1,12 +1,11 @@
 var constants = require('../constants.js');
 var helper = require('../helpers/lambda.js');
-//
-// Lambda Function
-//
-// Example: 
+
 /*
 
-{typ: "LAMBDA",
+Creates a standard lambda format that looks like this example:
+
+{type: "LAMBDA",
  formals: {typ: "CONS",
 		   car: {typ: "SYMBOL", val: "xx"},
 		   cdr: {typ: "CONS",
@@ -31,10 +30,9 @@ module.exports = {
 		var car = SEXPR.car; // The formals are in the car
 		var cdr = SEXPR.cdr; // The body is in the cdr
 
-		var closedBody = helper.closure( cdr.car, car );
+		var closedBody = helper.closure( cdr.car, car ); // Make sure that we encapsulate the body (closure)
 
-		return { type:constants.LAMBDA, formals:car, body:cdr };
+		return { type:constants.LAMBDA, formals:car, body:closedBody };
 	}
-	
 };
 

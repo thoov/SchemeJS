@@ -1,6 +1,7 @@
 var constants = require('../constants.js');
 var symbolTable = require('../symbolTable.js');
 var helper = require('./makeStructure.js');
+var structure = require('./makeStructure.js');
 
 module.exports = {
 	
@@ -69,19 +70,31 @@ module.exports = {
 		
 	},
 	
-	inFormals : function ( symbol, formals ) {
+	//
+	// Check to see if a symbol is within a given list.
+	//
+	inList : function ( symbol, list ) {
 			
-		while ( formals !== undefined && formals.type !== constants.NULL ) {
+		while ( list.type === constants.CONS ) {
 		
-			if ( formals.car.val === symbol.val ) {
+			if ( list.car.val === symbol.val ) {
 				return constants.TRUE;
 			}
 			
-			formals = formals.cdr;
+			list = list.cdr;
 		}
+		
+		if ( 'val' in list && list.val === symbol.val ) {
+			
+			return constants.TRUE;
+		}
+		
 		return constants.FALSE;
 	},
-		
+	
+	//
+	// Helper function to close a lambda body.
+	//
 	closure : function ( body, formals ) {
 		
 		
@@ -117,7 +130,7 @@ module.exports = {
 			
 			if ( value.type === constants.SYMBOL ) {
 				
-				if ( this.inFormals( value, formals ) === constants.FALSE ) {
+				if ( this.inList( value, formals ) === constants.FALSE ) {
 					
 					var symbolTableValue = symbolTable.lookup( value );
 
@@ -128,16 +141,14 @@ module.exports = {
 					
 				}
 			}
-			
-			
 					
 			newList = helper.makeCons( value,  newList );
 			arguments = arguments.cdr;
 		}
 		
-		console.log(JSON.stringify( newList, null, 4));
+		//console.log(JSON.stringify( newList, null, 4));
 		
-		return 0;
+		return structure.makeCons(newList, structure.makeItem(constants.NULL));
 	}
 	
 }
