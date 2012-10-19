@@ -57,7 +57,7 @@ var evaluation = {
 					return primFunctions.primfns[lookupValue.val]( cdr );
 				}
 				else if ( lookupValue.type === constants.LAMBDA ) {
-				
+								
 					return this.lambda( lookupValue, cdr );
 				}
 				else if (lookupValue.type !== constants.NULL) {
@@ -112,6 +112,12 @@ var evaluation = {
 		
 	
 		//
+		// If any actuals are symbols we need to replace them with their values.
+		//
+		actuals = helpers.replaceWithValues( actuals );
+
+			
+		//
 		// Check to make sure that the number of actuals is correct. 
 		//
 		// This will also push the formals and their values onto the symbol table.
@@ -119,9 +125,10 @@ var evaluation = {
 		if ( helpers.bindParameters(formals, actuals) === constants.FALSE ) {
 			
 			symbolTable.popOffTopStackLevel(); // Remove any bad variables that may have been added to the stack.
-			
 			return constants.FALSE;
 		}
+		
+		//symbolTable.print();
 						
 		//
 		// Now we evaluate the body.
@@ -129,6 +136,7 @@ var evaluation = {
 		var result = this.eval( body );		
 		
 		symbolTable.popOffTopStackLevel(); // Pop off a level for every level of recusion.
+		
 		return result;
 	}	
 };

@@ -13,8 +13,8 @@ module.exports = {
 			return constants.FALSE;
 		}
 		
-		var leftOperand = evaluation.eval(SEXPR.car);
-				
+		var leftOperand = evaluation.eval(SEXPR.car);						
+						
 		var currentExpression = SEXPR.cdr;
 		while ( currentExpression.type != constants.NULL ) {
 			

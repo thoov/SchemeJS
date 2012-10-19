@@ -93,9 +93,9 @@ if (TESTS) {
         
         if ( JSON.stringify(parse.tokenized) != parseTest.expected[i] ) {
             
-            process.stdout.write("Failed tests at: " + parseTest.tests[i] + "\n");
-            process.stdout.write("Expected:  " + parseTest.expected[i] + "\n");
-            process.stdout.write("Recieved:  " + JSON.stringify(parse.tokenized) + "\n\n");
+            console.log("Failed tests at: " + parseTest.tests[i]);
+            console.log("Expected:  " + parseTest.expected[i]);
+            console.log("Recieved:  " + JSON.stringify(parse.tokenized) + "\n");
             TEST_ERRORS++;
             PASSED = false;
         }
@@ -106,10 +106,11 @@ if (TESTS) {
 
         TEST_COUNT++;        
     }
+   
         
-    process.stdout.write(TEST_PASSES + " successfully tests\n");
-    process.stdout.write(TEST_ERRORS + " failed tests\n");
-    process.stdout.write(TEST_COUNT + " total tests\n\n");
+    console.log(TEST_PASSES + " successfully tests");
+    console.log(TEST_ERRORS + " failed tests");
+    console.log(TEST_COUNT + " total tests\n");
 }
 
 
