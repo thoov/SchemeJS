@@ -53,6 +53,23 @@ Hello World
 bar
 </code></pre>
 
+Closure
+--------
+<pre><code>>(def mkadder (lambda (n) (lambda (x) (+ n x) ) ) )
+#t
+
+>(def add100 ( mkadder 100 ))
+#t
+
+>(def add8 ( mkadder 8 ))
+#t
+
+>(add100 4)
+104
+
+>(add8 3)
+11
+</code></pre>
 
 Debugging
 --------
