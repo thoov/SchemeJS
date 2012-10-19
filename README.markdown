@@ -91,16 +91,15 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-<pre>
-JS/CC LALR(1) Parser Generator
-Copyright (C) 2007-2012 by Phorward Software Technologies, Jan Max Meyer
-http://jscc.phorward-software.com ++ contact<<AT>>phorward-software<<DOT>>com
---------------------------------------------------------------------------------
-
+--------
+JS/CC LALR(1) Parser Generator <br>
+Copyright (C) 2007-2012 by Phorward Software Technologies, Jan Max Meyer <br>
+http://jscc.phorward-software.com / contact@phorward-software.com <br>
+<br>
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
-
+<br>
   * Redistributions of source code must retain the above copyright
     notice, this list of conditions and the following disclaimer.
 	* Redistributions in binary form must reproduce the above copyright
@@ -122,4 +121,4 @@ PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
 OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
 OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</pre>
+ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
