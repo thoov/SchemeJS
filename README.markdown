@@ -16,6 +16,10 @@ For node, using JS/CC uses the following command line:
 </pre>
 
 Once the javascript file has been compiled, you can run the interpreter via: 
+<pre><b>node scheme.js</b></pre>
+</pre>
+
+You can run tests which are located inside of the tests folder via the -t parameter:
 <pre><b>node scheme.js -t</b></pre>
 </pre>
 
