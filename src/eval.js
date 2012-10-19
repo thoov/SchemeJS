@@ -79,7 +79,15 @@ var evaluation = {
 		}
 		else if ( SEXPR.type == constants.SYMBOL ) {
 			
-			return symbolTable.lookup( SEXPR ).val;
+			var lookupValue = symbolTable.lookup( SEXPR );
+				
+			if (lookupValue.type === constants.NULL) {
+						
+				console.log("Undefined symbol: " + SEXPR.val);
+				return constants.FALSE;
+			}
+			
+			return lookupValue.val;
 		}
 		else {
 			
@@ -89,7 +97,7 @@ var evaluation = {
 			if ( SEXPR.type === constants.STRING ) { // If it is a string then we will print the quotes with the string value.
 				return '"' + SEXPR.val + '"';
 			}
-			
+						
 			return SEXPR.val;
 		}
 	},
@@ -127,9 +135,7 @@ var evaluation = {
 			symbolTable.popOffTopStackLevel(); // Remove any bad variables that may have been added to the stack.
 			return constants.FALSE;
 		}
-		
-		//symbolTable.print();
-						
+								
 		//
 		// Now we evaluate the body.
 		//
