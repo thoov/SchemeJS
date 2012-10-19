@@ -56,6 +56,21 @@ Hello World
 bar
 </code></pre>
 
+Recursion
+--------
+<pre><code>>(def factorial (lambda (n) (if (= 0 n) (+ 1) (* n (factorial (- n 1))))))
+#t
+
+>(factorial 0)
+1
+
+>(factorial 2) 
+2
+
+>(factorial 5)
+120
+</code></pre>
+
 Closure
 --------
 <pre><code>>(def mkadder (lambda (n) (lambda (x) (+ n x) ) ) )
