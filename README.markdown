@@ -19,6 +19,9 @@ Once the javascript file has been compiled, you can run the interpreter via:
 <pre><b>node scheme.js -t</b></pre>
 </pre>
 
+You can run whole scheme files via the -f parameter (replace file_name with the relative file path): 
+<pre><b>node scheme.js -f file_name</b></pre>
+</pre>
 
 Sample expressions:
 --------
