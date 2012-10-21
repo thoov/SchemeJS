@@ -11,11 +11,7 @@ Requirements:
 How to run:
 --------
 
-For node, using JS/CC uses the following command line: 
-<pre><b>node jscc.js -v -o scheme.js -p node -t driver_node.js_ scheme.par</b></pre>
-</pre>
-
-Once the javascript file has been compiled, you can run the interpreter via: 
+You can run the interpreter via: 
 <pre><b>node scheme.js</b></pre>
 </pre>
 
