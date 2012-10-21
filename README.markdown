@@ -6,7 +6,6 @@ Basic Scheme interpreter written in javascript with help from jscc. Only a small
 Requirements:
 --------
 * [NodeJS] (http://nodejs.org/) ( tested on v0.8+ ) 
-* [JS/CC] (http://jscc.phorward-software.com/) ( v0.30 )
 
 How to run:
 --------
@@ -28,7 +27,6 @@ Sample expressions:
 [View All Primitive Functions] (https://github.com/thoov/Scheme-REPL/tree/master/src/lib)
 
 <pre><code>> (def helloWorld (+ "Hello" " " "World"))
-#t
 > helloWorld
 Hello World
 </code></pre>
@@ -39,7 +37,6 @@ Hello World
 </code></pre>
 
 <pre><code>> (def double5 (lambda (x) ( * x x ((lambda (y) (+ y 5)) 6))))
-#t
 > (double5 3)
 99
 </code></pre>
@@ -59,7 +56,6 @@ bar
 Recursion
 --------
 <pre><code>>(def factorial (lambda (n) (if (= 0 n) (+ 1) (* n (factorial (- n 1))))))
-#t
 
 >(factorial 0)
 1
@@ -74,13 +70,10 @@ Recursion
 Closure
 --------
 <pre><code>>(def mkadder (lambda (n) (lambda (x) (+ n x) ) ) )
-#t
 
 >(def add100 ( mkadder 100 ))
-#t
 
 >(def add8 ( mkadder 8 ))
-#t
 
 >(add100 4)
 104
