@@ -35,7 +35,6 @@ module.exports = {
 			return constants.FALSE;
 		}
 		
-		
 		//
 		// Variable is bound to value.
 		//
@@ -56,7 +55,5 @@ module.exports = {
 		else {		
 			symbolTable.alist = symbolTable.makeCons( symbolTable.makeCons(variable, value),  symbolTable.alist);
 		}
-		
-		return constants.TRUE;
 	}
 }
