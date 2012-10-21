@@ -1,0 +1,71 @@
+/~ Tokens Definitions for Scheme Syntax ~/
+
+/~ Tokens to be ignored (e.g. whitespace, comments) ~/
+! 	' |\t|\r\n|\n|;[^\n]*\n';
+
+/~ Token pattern matching rules ~/
+	'[ ]?\)'                                      RPAREN
+	'[ ]?\([ ]?'                                  LPAREN
+	'\.'                                          DOT
+	'[0-9]+[ ]?|[0-9]+\.[0-9]*|[0-9]*\.[0-9]+'    NUMBER   [* %match = parseFloat( %match ); *]
+	'[^\(\)0-9\.\'\`\,\@" ][^\) ]*'               SYMBOL   [* /*symbols cannot begin with digits, parens, quotes, dots, etc.*/ *]
+	'\"[^"]*\"'                                   STRING   [* %match = %match.substr( 1, %match.length - 2 ); *]
+    ;
+
+##
+
+
+readonce:   sexpr                                    [* parse.tokenized = %1; *]
+			;
+
+sexpr:      atom                                      
+			| list                                   [* %% = %1; *]
+			;
+
+list:       LPAREN RPAREN	                         [* %% = parse.createNull(); *]
+			| LPAREN atom members RPAREN             [* %% = parse.createCons(%2, %3); /* a list must first start with a symbol */ *]
+			| LPAREN atom RPAREN                     [* %% = parse.createCons(%2); *]
+			| LPAREN list RPAREN                     [* %% = parse.createCons(parse.createCons(%2)); *]
+			| LPAREN list members RPAREN             [* %% = parse.createCons(parse.createCons(%2), %3); *]
+			;
+
+members:    sexpr members                            [* %% = parse.createCons(%1, %2); *]
+			| DOT sexpr                              [* %% = %2; *]
+			| sexpr                                  [* %% = parse.createCons(%1); *]
+			;
+
+atom:       NUMBER                                   [* %% = parse.createAtom('NUMBER', %1); *]
+			| SYMBOL                                 [* %% = parse.createAtom('SYMBOL', %1); *]
+			| STRING                                 [* %% = parse.createAtom('STRING', %1); *]
+			;
+
+[*
+
+var error_offsets = new Array();
+var error_lookaheads = new Array();
+var error_count = 0;
+var evaluation = require('../src/eval.js');
+var parse = require('../src/parse.js');
+
+module.exports = {
+	
+	tokenize : function ( TEXT ) {
+		
+		if( ( error_count = __NODEJS_parse( TEXT.trim(), error_offsets, error_lookaheads ) ) > 0 ) {
+		
+			for( var i = 0; i < error_count; i++ )
+				console.log( "Parse error near:_" + TEXT.substr( error_offsets[i] ) + ", expecting \"" + error_lookaheads[i].join() + "\"" );
+		}
+		else {
+		
+			var eval = evaluation.eval(parse.tokenized);
+				
+			//
+			// TODO: If we have a cons at this point then we need to turn it into "scheme" to be printed.
+			//
+			
+			return eval;
+		}
+	}	
+}
+*]
