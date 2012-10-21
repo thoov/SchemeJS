@@ -68,7 +68,9 @@ process.stdin.on('data', function (text) {
 		}
 		else {
 
-			console.log(tokenizer.tokenize( text ));
+			var result = tokenizer.tokenize( text );
+			if ( result !== null )
+				console.log(tokenizer.tokenize( text ));
 		}
 	}
 	process.stdout.write("> ");

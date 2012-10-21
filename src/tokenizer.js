@@ -623,6 +623,9 @@ module.exports = {
 		
 			var eval = evaluation.eval(parse.tokenized);
 				
+			if ( eval === undefined ) 
+				return null;
+				
 			//
 			// TODO: If we have a cons at this point then we need to turn it into "scheme" to be printed.
 			//
