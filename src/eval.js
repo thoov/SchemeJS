@@ -60,6 +60,9 @@ var evaluation = {
 								
 					return this.lambda( lookupValue, cdr );
 				}
+				else if ( lookupValue.type === constants.MACRO ) {
+					
+				}
 				else if (lookupValue.type !== constants.NULL) {
 				
 					return lookupValue.val;

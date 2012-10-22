@@ -75,3 +75,12 @@ process.stdin.on('data', function (text) {
 	}
 	process.stdout.write("> ");
 });
+
+
+//
+// Catch all errors that are encountered.
+//
+process.on('uncaughtException', function(err) {
+ 	console.log(err);
+ 	process.stdout.write("> ");
+});

@@ -10,7 +10,7 @@ var symbolTable = require('./symbolTable.js');
 module.exports = {
 	
 	primfns : [],
-	
+		
 	initialize : function() {
 		
 		// 
@@ -36,6 +36,6 @@ module.exports = {
 			}
 		});
 		
-		this.primfns = pFunctions;		
+		this.primfns = pFunctions;			
 	}
 }
