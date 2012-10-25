@@ -609,6 +609,7 @@ var error_lookaheads = new Array();
 var error_count = 0;
 var evaluation = require('../src/eval.js');
 var parse = require('../src/parse.js');
+var conversion = require('./helpers/conversion.js');
 
 module.exports = {
 	
@@ -623,13 +624,8 @@ module.exports = {
 		
 			var eval = evaluation.eval(parse.tokenized);
 				
-			if ( eval === undefined ) 
-				return null;
+			eval = conversion.toScreen(eval);	
 				
-			//
-			// TODO: If we have a cons at this point then we need to turn it into "scheme" to be printed.
-			//
-			
 			return eval;
 		}
 	}	

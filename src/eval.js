@@ -24,7 +24,7 @@ var evaluation = {
 			
 			var car = SEXPR.car;
 			var cdr = SEXPR.cdr;
-					
+			
 			//
 			// Check to see if the first car atom that is not a cons is a symbol.
 			//
@@ -43,8 +43,7 @@ var evaluation = {
 				// Look the symbol up in the symbol table.
 				//
 				var lookupValue = symbolTable.lookup( car );
-				
-								
+												
 				if ( lookupValue.type == constants.PRIM ) {
 					
 					//
@@ -60,12 +59,9 @@ var evaluation = {
 								
 					return this.lambda( lookupValue, cdr );
 				}
-				else if ( lookupValue.type === constants.MACRO ) {
-					
-				}
 				else if (lookupValue.type !== constants.NULL) {
 				
-					return lookupValue.val;
+					return lookupValue;
 				}
 				else {
 				
@@ -90,18 +86,14 @@ var evaluation = {
 				return constants.FALSE;
 			}
 			
-			return lookupValue.val;
+			return lookupValue;
 		}
 		else {
 			
 			//
-			// If the sexpr is not a cons then it is an atom.
+			// If the sexpr is not a cons or a symbol then it is an atom.
 			//
-			if ( SEXPR.type === constants.STRING ) { // If it is a string then we will print the quotes with the string value.
-				return '"' + SEXPR.val + '"';
-			}
-						
-			return SEXPR.val;
+			return SEXPR;
 		}
 	},
 	//

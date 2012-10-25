@@ -1,3 +1,5 @@
+var constants = require('./constants.js');
+
 //
 // All the built in macros
 //
@@ -45,7 +47,15 @@ module.exports {
 		
 	},
 	
-	def : function ( SEXPR ) {
+	def : function ( car, cdr ) {
+		
+		console.log("HERE");
+		console.log(JSON.stringify(car, null, 4));
+		
+		console.log(JSON.stringify(cdr, null, 4));
+		
+		return constants.TRUE;
+		var SEXPR = car.expression;
 		
 		//
 		// This is the symbol that we are defining

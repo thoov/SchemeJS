@@ -1,6 +1,7 @@
 var constants = require('../constants.js');
 var evaluation = require('../eval.js');
 var symbolTable = require('../symbolTable.js');
+var conversion = require('../helpers/conversion.js');
 
 //
 // Def Function
@@ -35,27 +36,28 @@ module.exports = {
 			console.log('Invalid number of parameters passed into def. Must pass 2, more than 2 given.');
 			return constants.FALSE;
 		}
-		
-		//return { type:constants.MACRO, name:"DEF", expression:SEXPR };
-		
+				
 		//
 		// Variable is bound to value.
 		//
 		var value = evaluation.eval(SEXPR.cdr.car);
-		
-			
+				
 		//
 		// Insert into symbol table the new variable that was defined.
 		//
-		if (typeof value === 'number') {
+		if ( value.type ===  constants.NUMBER ) {
 	
+			value = conversion.convert(value);
 			symbolTable.alist = symbolTable.makeCons( symbolTable.makeCons(variable, symbolTable.makeItem( constants.NUMBER, value)), symbolTable.alist);   
 		}
-		else if (typeof value === 'string') {
+		else if ( value.type === constants.STRING ) {
 	
+			value = conversion.convert(value);
 			symbolTable.alist = symbolTable.makeCons( symbolTable.makeCons(variable, symbolTable.makeItem( constants.STRING, value)),  symbolTable.alist);
 		}
 		else {		
+			
+			value = conversion.convert(value);
 			symbolTable.alist = symbolTable.makeCons( symbolTable.makeCons(variable, value),  symbolTable.alist);
 		}
 	}

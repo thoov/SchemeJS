@@ -1,6 +1,7 @@
 var constants = require('../constants.js');
 var symbolTable = require('../symbolTable.js');
 var helper = require('./makeStructure.js');
+var conversion = require('./conversion.js');
 
 module.exports = {
 	
@@ -44,7 +45,7 @@ module.exports = {
 		newList = helper.makeItem( constants.NULL );
 		
 		while ( aList.type !== constants.NULL ) {
-					
+			
 			if ( aList.car.type === constants.SYMBOL ) {
 				
 				aList.car = symbolTable.lookup( aList.car );

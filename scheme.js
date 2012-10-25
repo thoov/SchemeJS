@@ -69,8 +69,8 @@ process.stdin.on('data', function (text) {
 		else {
 
 			var result = tokenizer.tokenize( text );
-			if ( result !== null )
-				console.log(tokenizer.tokenize( text ));
+			if ( result !== undefined )
+				console.log(result);
 		}
 	}
 	process.stdout.write("> ");
@@ -81,6 +81,6 @@ process.stdin.on('data', function (text) {
 // Catch all errors that are encountered.
 //
 process.on('uncaughtException', function(err) {
- 	console.log(err);
+ 	console.error(err.stack);
  	process.stdout.write("> ");
 });
